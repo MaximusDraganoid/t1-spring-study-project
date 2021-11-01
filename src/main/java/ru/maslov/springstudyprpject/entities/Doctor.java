@@ -2,13 +2,14 @@ package ru.maslov.springstudyprpject.entities;
 
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import java.util.List;
 import java.util.Set;
 
 @Entity
 public class Doctor extends User {
-    @OneToMany
-    private Set<DoctorsSpecialization> specialization;
+    @OneToOne
+    private DoctorsSpecialization specialization;
 
     @OneToMany(mappedBy = "doctor")
     private List<DoctorsSchedule> scheduleList;
@@ -24,7 +25,7 @@ public class Doctor extends User {
                   String login,
                   String password,
                   String phoneNumber,
-                  Set<DoctorsSpecialization> specialization,
+                  DoctorsSpecialization specialization,
                   List<DoctorsSchedule> scheduleList,
                   Set<Appointment> appointments) {
         super(name, patronymic, surname, login, password, phoneNumber);
@@ -33,11 +34,11 @@ public class Doctor extends User {
         this.appointments = appointments;
     }
 
-    public Set<DoctorsSpecialization> getSpecialization() {
+    public DoctorsSpecialization getSpecialization() {
         return specialization;
     }
 
-    public void setSpecialization(Set<DoctorsSpecialization> specialization) {
+    public void setSpecialization(DoctorsSpecialization specialization) {
         this.specialization = specialization;
     }
 
