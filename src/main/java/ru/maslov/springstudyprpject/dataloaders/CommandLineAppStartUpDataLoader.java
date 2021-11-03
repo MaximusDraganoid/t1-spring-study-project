@@ -62,7 +62,7 @@ public class CommandLineAppStartUpDataLoader implements CommandLineRunner {
                     "Тюрин",
                     "tuirnis",
                     "1vaN",
-                    "+79106272030",
+                    "79106272030",
                     "test_number_1",
                     new HashSet<>());
 
@@ -71,7 +71,7 @@ public class CommandLineAppStartUpDataLoader implements CommandLineRunner {
                     "Шумилов",
                     "shumilovam",
                     "shum12",
-                    "+79106272031",
+                    "79106272031",
                     "test_number_2",
                     new HashSet<>());
 
@@ -80,7 +80,7 @@ public class CommandLineAppStartUpDataLoader implements CommandLineRunner {
                     "Шубин",
                     "root",
                     "mafioz67",
-                    "+79106272032",
+                    "79106272032",
                     "test_number_3",
                     new HashSet<>());
 
@@ -95,17 +95,17 @@ public class CommandLineAppStartUpDataLoader implements CommandLineRunner {
                     "Иванов",
                     "ivanovii",
                     "ai_is_coming",
-                    "+79106272033",
+                    "79106272033",
                     specializations.get(generator.nextInt(specializations.size())),
                     new LinkedList<>(),
                     new HashSet<>());
 
-            Doctor secondDoctor = new Doctor("Пётр",
+            Doctor secondDoctor = new Doctor("Петр",
                     "Петрович",
                     "Селедкин",
                     "seledkinpp",
-                    "drop_the_database",
-                    "+79106272035",
+                    "drop_the_data",
+                    "79106272035",
                     specializations.get(generator.nextInt(specializations.size())),
                     new LinkedList<>(),
                     new HashSet<>());

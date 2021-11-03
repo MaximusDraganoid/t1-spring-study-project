@@ -1,6 +1,9 @@
 package ru.maslov.springstudyprpject.entities;
 
+import org.hibernate.validator.constraints.Length;
+
 import javax.persistence.*;
+import javax.validation.constraints.Pattern;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -10,16 +13,27 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Pattern(regexp = "[А-Я][а-я-]+")
+    @Length(min = 2, max = 40)
     private String name;
 
+    @Pattern(regexp = "[А-Я][а-я-]+")
+    @Length(min = 2, max = 40)
     private String patronymic;
 
+    @Pattern(regexp = "[А-Я][а-я-]+")
+    @Length(min = 2, max = 40)
     private String surname;
 
+    @Pattern(regexp = "[a-zA-Z][A-Za-z1-9-_]*")
+    @Length(min = 3, max = 14)
     private String login;
 
+    @Pattern(regexp = "[A-Za-z1-9-_]*")
+    @Length(min = 3, max = 15)
     private String password;
 
+    @Pattern(regexp = "[7|8][0-9]{10}")
     private String phoneNumber;
 
     public User() {
