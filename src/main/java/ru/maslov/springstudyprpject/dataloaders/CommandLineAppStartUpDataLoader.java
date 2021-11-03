@@ -63,7 +63,7 @@ public class CommandLineAppStartUpDataLoader implements CommandLineRunner {
                     "tuirnis",
                     "1vaN",
                     "79106272030",
-                    "test_number_1",
+                    "1234567890123456",
                     new HashSet<>());
 
             Patient secondPatient = new Patient("Александр",
@@ -72,7 +72,7 @@ public class CommandLineAppStartUpDataLoader implements CommandLineRunner {
                     "shumilovam",
                     "shum12",
                     "79106272031",
-                    "test_number_2",
+                    "1234567890123457",
                     new HashSet<>());
 
             Patient thirdPatient = new Patient("Кирилл",
@@ -81,7 +81,7 @@ public class CommandLineAppStartUpDataLoader implements CommandLineRunner {
                     "root",
                     "mafioz67",
                     "79106272032",
-                    "test_number_3",
+                    "1234567890123458",
                     new HashSet<>());
 
             patientRepository.saveAll(List.of(firstPatient, secondPatient, thirdPatient));
