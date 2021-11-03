@@ -10,10 +10,14 @@ import java.util.List;
 
 @Service
 public class DoctorService {
+
     private final DoctorRepository doctorRepository;
 
-    public DoctorService(DoctorRepository doctorRepository) {
+    private final UserService userService;
+
+    public DoctorService(DoctorRepository doctorRepository, UserService userService) {
         this.doctorRepository = doctorRepository;
+        this.userService = userService;
     }
 
     public List<Doctor> getList() {
@@ -34,11 +38,11 @@ public class DoctorService {
     }
 
     public Doctor create(Doctor doctor) {
-        if (doctorRepository.findByLogin(doctor.getLogin()).isPresent()) {
+        if (userService.findByLogin(doctor.getLogin()).isPresent()) {
             throw new DoctorDataValidationException("login " + doctor.getLogin() + " exist in base");
         }
 
-        if(doctorRepository.findByPhoneNumber(doctor.getPhoneNumber()).isPresent()) {
+        if(userService.findByPhoneNumber(doctor.getPhoneNumber()).isPresent()) {
             throw new DoctorDataValidationException("phone number "
                     + doctor.getPhoneNumber() + " exist in base");
         }
