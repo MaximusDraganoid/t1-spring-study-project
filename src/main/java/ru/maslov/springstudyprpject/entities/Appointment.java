@@ -3,6 +3,7 @@ package ru.maslov.springstudyprpject.entities;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 public class Appointment {
@@ -96,5 +97,33 @@ public class Appointment {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Appointment that = (Appointment) o;
+
+        if (!Objects.equals(patient, that.patient)) return false;
+        if (!Objects.equals(doctor, that.doctor)) return false;
+        if (!Objects.equals(dataTimeOfAppointment, that.dataTimeOfAppointment))
+            return false;
+        if (!Objects.equals(typeOfAppointment, that.typeOfAppointment))
+            return false;
+        if (status != that.status) return false;
+        return Objects.equals(description, that.description);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = patient != null ? patient.hashCode() : 0;
+        result = 31 * result + (doctor != null ? doctor.hashCode() : 0);
+        result = 31 * result + (dataTimeOfAppointment != null ? dataTimeOfAppointment.hashCode() : 0);
+        result = 31 * result + (typeOfAppointment != null ? typeOfAppointment.hashCode() : 0);
+        result = 31 * result + (status != null ? status.hashCode() : 0);
+        result = 31 * result + (description != null ? description.hashCode() : 0);
+        return result;
     }
 }

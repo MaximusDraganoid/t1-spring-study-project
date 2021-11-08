@@ -1,11 +1,14 @@
 package ru.maslov.springstudyprpject.servicies;
 
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import ru.maslov.springstudyprpject.entities.Doctor;
+import ru.maslov.springstudyprpject.entities.DoctorsSpecialization;
 import ru.maslov.springstudyprpject.exceptions.DoctorDataValidationException;
 import ru.maslov.springstudyprpject.exceptions.DoctorNotFoundException;
 import ru.maslov.springstudyprpject.repositories.DoctorRepository;
 
+import java.time.DayOfWeek;
 import java.util.List;
 
 @Service
@@ -48,5 +51,10 @@ public class DoctorService {
         }
 
         return doctorRepository.save(doctor);
+    }
+
+    public List<Doctor> getDoctorForAppointmentsRecordByDate(DayOfWeek dayOfWeek,
+                                                      DoctorsSpecialization specialization) {
+        return doctorRepository.getDoctorForAppointmentsRecordByDate(dayOfWeek, specialization);
     }
 }
