@@ -6,12 +6,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import ru.maslov.springstudyprpject.entities.*;
-import ru.maslov.springstudyprpject.repositories.DoctorRepository;
-import ru.maslov.springstudyprpject.repositories.DoctorSpecializationRepository;
-import ru.maslov.springstudyprpject.repositories.PatientRepository;
-import ru.maslov.springstudyprpject.repositories.TypeOfAppointmentRepository;
+import ru.maslov.springstudyprpject.repositories.*;
 
+import java.time.DayOfWeek;
 import java.time.Duration;
+import java.time.LocalTime;
 import java.util.*;
 
 @Component
@@ -24,6 +23,8 @@ public class CommandLineAppStartUpDataLoader implements CommandLineRunner {
     private PatientRepository patientRepository;
 
     private DoctorRepository doctorRepository;
+
+    private DoctorScheduleRepository doctorScheduleRepository;
 
 
     @Override
@@ -96,7 +97,7 @@ public class CommandLineAppStartUpDataLoader implements CommandLineRunner {
                     "ivanovii",
                     "ai_is_coming",
                     "79106272033",
-                    specializations.get(generator.nextInt(specializations.size())),
+                    specializations.get(0),
                     new LinkedList<>(),
                     new HashSet<>());
 
@@ -106,11 +107,55 @@ public class CommandLineAppStartUpDataLoader implements CommandLineRunner {
                     "seledkinpp",
                     "drop_the_data",
                     "79106272035",
-                    specializations.get(generator.nextInt(specializations.size())),
+                    specializations.get(1),
                     new LinkedList<>(),
                     new HashSet<>());
 
-            doctorRepository.saveAll(List.of(firstDoctor, secondDoctor));
+            Doctor thirdDoctor = new Doctor("Семен",
+                    "Петрович",
+                    "Екатин",
+                    "ekatinsp",
+                    "drop_the_data",
+                    "79106272335",
+                    specializations.get(2),
+                    new LinkedList<>(),
+                    new HashSet<>());
+
+            Doctor fourthDoctor = new Doctor("Кирилл",
+                    "Евгеньевич",
+                    "Бахтин",
+                    "bachtinke",
+                    "drop_the_data",
+                    "79106372335",
+                    specializations.get(2),
+                    new LinkedList<>(),
+                    new HashSet<>());
+
+            doctorRepository.saveAll(List.of(firstDoctor, secondDoctor, thirdDoctor, fourthDoctor));
+
+            DoctorsSchedule firstDoctorScheduleFirstDay = initAllDay(firstDoctor, DayOfWeek.MONDAY);
+            DoctorsSchedule firstDoctorScheduleSecondDay = initAllDay(firstDoctor, DayOfWeek.WEDNESDAY);
+            DoctorsSchedule firstDoctorScheduleThirdDay = initFirstHalfDay(firstDoctor, DayOfWeek.FRIDAY);
+
+            DoctorsSchedule secondDoctorScheduleFirstDay = initAllDay(secondDoctor, DayOfWeek.TUESDAY);
+            DoctorsSchedule secondDoctorScheduleSecondDay = initAllDay(secondDoctor, DayOfWeek.THURSDAY);
+            DoctorsSchedule secondDoctorScheduleThirdDay = initSecondHalfDay(secondDoctor, DayOfWeek.FRIDAY);
+
+            DoctorsSchedule thirdDoctorScheduleFirstDay = initAllDay(thirdDoctor, DayOfWeek.MONDAY);
+            DoctorsSchedule thirdDoctorScheduleSecondDay = initAllDay(thirdDoctor, DayOfWeek.WEDNESDAY);
+            DoctorsSchedule thirdDoctorScheduleThirdDay = initFirstHalfDay(thirdDoctor, DayOfWeek.FRIDAY);
+
+            DoctorsSchedule fourthDoctorScheduleFirstDay = initAllDay(fourthDoctor, DayOfWeek.MONDAY);
+            DoctorsSchedule fourthDoctorScheduleSecondDay = initAllDay(fourthDoctor, DayOfWeek.WEDNESDAY);
+            DoctorsSchedule fourthDoctorScheduleThirdDay = initFirstHalfDay(fourthDoctor, DayOfWeek.FRIDAY);
+
+            doctorScheduleRepository.saveAll(List.of(firstDoctorScheduleFirstDay, firstDoctorScheduleSecondDay,
+                    firstDoctorScheduleThirdDay, secondDoctorScheduleFirstDay,
+                    secondDoctorScheduleSecondDay, secondDoctorScheduleThirdDay,
+                    thirdDoctorScheduleFirstDay, thirdDoctorScheduleSecondDay,
+                    thirdDoctorScheduleThirdDay, fourthDoctorScheduleFirstDay,
+                    fourthDoctorScheduleSecondDay, fourthDoctorScheduleThirdDay
+                    ));
         }
     }
 
@@ -132,5 +177,31 @@ public class CommandLineAppStartUpDataLoader implements CommandLineRunner {
     @Autowired
     public void setDoctorRepository(DoctorRepository doctorRepository) {
         this.doctorRepository = doctorRepository;
+    }
+
+    @Autowired
+    public void setDoctorScheduleRepository(DoctorScheduleRepository doctorScheduleRepository) {
+        this.doctorScheduleRepository = doctorScheduleRepository;
+    }
+
+    private DoctorsSchedule initFirstHalfDay(Doctor doctor, DayOfWeek dayOfWeek) {
+        return new DoctorsSchedule(doctor,
+                dayOfWeek,
+                LocalTime.of(8, 0, 0),
+                LocalTime.of(14, 0, 0));
+    }
+
+    private DoctorsSchedule initSecondHalfDay(Doctor doctor, DayOfWeek dayOfWeek) {
+        return new DoctorsSchedule(doctor,
+                dayOfWeek,
+                LocalTime.of(14, 0, 0),
+                LocalTime.of(20, 0, 0));
+    }
+
+    private DoctorsSchedule initAllDay(Doctor doctor, DayOfWeek dayOfWeek) {
+        return new DoctorsSchedule(doctor,
+                dayOfWeek,
+                LocalTime.of(8, 0, 0),
+                LocalTime.of(18, 0, 0));
     }
 }
