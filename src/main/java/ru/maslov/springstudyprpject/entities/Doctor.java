@@ -59,4 +59,6 @@ public class Doctor extends User {
     public void setAppointments(Set<Appointment> appointments) {
         this.appointments = appointments;
     }
+
+
 }

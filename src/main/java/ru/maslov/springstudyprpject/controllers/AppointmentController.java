@@ -1,10 +1,7 @@
 package ru.maslov.springstudyprpject.controllers;
 
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.maslov.springstudyprpject.dto.AppointmentDTO;
 import ru.maslov.springstudyprpject.dto.mappers.AppointmentMapper;
 import ru.maslov.springstudyprpject.entities.Appointment;
@@ -42,6 +39,12 @@ public class AppointmentController {
                 .stream()
                 .map(mapper::toAppointmentDTO)
                 .collect(Collectors.toList());
+    }
+
+    @PostMapping
+    public AppointmentDTO createAppointment(@RequestBody AppointmentDTO appointmentDTO) {
+        Appointment appointment = appointmentService.createAppointment(mapper.toAppointment(appointmentDTO));
+        return mapper.toAppointmentDTO(appointment);
     }
 
 }
