@@ -47,30 +47,30 @@ public class AppointmentService {
 
     //todo: рефактор
     public Set<Appointment> getAppointmentBySpecializationIdAndData(Long specializationId,
-                                                                     String data,
-                                                                     Long appointmentTypeId) {
+                                                                    String data,
+                                                                    Long appointmentTypeId) {
         LocalDate date;
         try {
             date = LocalDate.parse(data); //todo: обработка исключений в случае неверного формата данных
         } catch (DateTimeParseException e) {
             throw new AppointmentDateFormatException("format of date "
-                    +  data
+                    + data
                     + " not supported");
         }
         Patient patient = new Patient(); //todo: похже изменить работу с введением sequrity
         DoctorsSpecialization specialization =
-            doctorSpecializationRepository.findById(specializationId).orElseThrow(() -> {
-                throw new DoctorSpecializationNotFoundException("doctors specialization with id " +
-                        specializationId +
-                        " not found");
-            });
+                doctorSpecializationRepository.findById(specializationId).orElseThrow(() -> {
+                    throw new DoctorSpecializationNotFoundException("doctors specialization with id " +
+                            specializationId +
+                            " not found");
+                });
 
         TypeOfAppointment typeOfAppointment =
-            typeOfAppointmentRepository.findById(appointmentTypeId).orElseThrow(() -> {
-                throw new TypeOfAppointmentNotFoundException("type of appointment with id " +
-                        appointmentTypeId +
-                        " not found");
-            });
+                typeOfAppointmentRepository.findById(appointmentTypeId).orElseThrow(() -> {
+                    throw new TypeOfAppointmentNotFoundException("type of appointment with id " +
+                            appointmentTypeId +
+                            " not found");
+                });
 
         List<Doctor> doctors = doctorService.getDoctorForAppointmentsRecordByDate(date.getDayOfWeek(),
                 specialization);
@@ -83,23 +83,19 @@ public class AppointmentService {
         for (Doctor doctor : doctors) {
             DoctorsSchedule doctorsSchedule = findScheduleByDayOfWeek(date.getDayOfWeek(), doctor);
             SortedSet<Appointment> sortedDoctorsAppointmentSet =
-                    new TreeSet<Appointment>(Comparator
+                    new TreeSet<>(Comparator
                             .comparing(Appointment::getDataTimeOfAppointment));
             sortedDoctorsAppointmentSet.addAll(doctor.getAppointments());
-
-            //алгоритм обработки - нужно как то проверять возможно ли в уазанное время поставить прием?
-//            Iterator<Appointment> iterator = sortedDoctorsAppointmentSet.iterator();
-//            Appointment currentAppointment;
 
             LocalTime startWorkTime = doctorsSchedule.getStartTime();
             LocalTime finishWorkTime = doctorsSchedule.getFinishTime();
             do {
                 if (startWorkTime.plus(typeOfAppointment.getDuration()).isBefore(finishWorkTime)
-                    || startWorkTime.plus(typeOfAppointment.getDuration()).equals(finishWorkTime)) {
+                        || startWorkTime.plus(typeOfAppointment.getDuration()).equals(finishWorkTime)) {
                     //todo: проверка на то не пересекается ли данный промежуто времени с другими приемами врача
                     if (!isCrossingAppointments(sortedDoctorsAppointmentSet.iterator(),
-                                                    startWorkTime,
-                                                    typeOfAppointment.getDuration())) {
+                            startWorkTime,
+                            typeOfAppointment.getDuration())) {
                         Appointment appointment = new Appointment(patient,
                                 doctor,
                                 startWorkTime.atDate(date),
@@ -127,8 +123,8 @@ public class AppointmentService {
                     .plus(currentAppointment.getTypeOfAppointment().getDuration());
 
             if (timeBetween(predictedStartWorkTime, startAppointmentTime, finishAppointmentTime)
-                || timeBetween(predictedStartWorkTime.plus(duration), startAppointmentTime, finishAppointmentTime)
-                || durationIn(predictedStartWorkTime, duration, startAppointmentTime, finishAppointmentTime)) {
+                    || timeBetween(predictedStartWorkTime.plus(duration), startAppointmentTime, finishAppointmentTime)
+                    || durationIn(predictedStartWorkTime, duration, startAppointmentTime, finishAppointmentTime)) {
                 return true;
             }
         }
@@ -141,7 +137,7 @@ public class AppointmentService {
     }
 
     private boolean durationIn(LocalTime targetTime, Duration duration, LocalTime start, LocalTime end) {
-        return (targetTime.isBefore(start) || targetTime.equals(start) )
+        return (targetTime.isBefore(start) || targetTime.equals(start))
                 && (targetTime.plus(duration).isAfter(end) || targetTime.plus(duration).equals(end));
     }
 
