@@ -31,6 +31,10 @@ public class AppointmentService {
         this.doctorService = doctorService;
     }
 
+    public Set<Appointment> findAppointmentByPatientId(Long id) {
+        return appointmentRepository.findAppointmentByPatientId(id);
+    }
+
     public Set<Appointment> getAppointmentBySpecializationIdAndData(Long specializationId,
                                                                      String data,
                                                                      Long appointmentTypeId) {
