@@ -2,6 +2,9 @@ package ru.maslov.springstudyprpject.servicies;
 
 import org.springframework.stereotype.Service;
 import ru.maslov.springstudyprpject.entities.*;
+import ru.maslov.springstudyprpject.exceptions.AppointmentDateFormatException;
+import ru.maslov.springstudyprpject.exceptions.DoctorSpecializationNotFoundException;
+import ru.maslov.springstudyprpject.exceptions.TypeOfAppointmentNotFoundException;
 import ru.maslov.springstudyprpject.repositories.AppointmentRepository;
 import ru.maslov.springstudyprpject.repositories.DoctorSpecializationRepository;
 import ru.maslov.springstudyprpject.repositories.TypeOfAppointmentRepository;
@@ -9,6 +12,7 @@ import ru.maslov.springstudyprpject.repositories.TypeOfAppointmentRepository;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeParseException;
 import java.util.*;
 
 @Service
@@ -35,21 +39,31 @@ public class AppointmentService {
         return appointmentRepository.findAppointmentByPatientId(id);
     }
 
+    //todo: рефактор
     public Set<Appointment> getAppointmentBySpecializationIdAndData(Long specializationId,
                                                                      String data,
                                                                      Long appointmentTypeId) {
-        //todo: оно работает - решить каким образом избавиться от циклических зависимостей при серриализации
-        // и избавиться от них
-        LocalDate date = LocalDate.parse(data); //todo: обработка исключений в случае неверного формата данных
+        LocalDate date;
+        try {
+            date = LocalDate.parse(data); //todo: обработка исключений в случае неверного формата данных
+        } catch (DateTimeParseException e) {
+            throw new AppointmentDateFormatException("format of date "
+                    +  data
+                    + " not supported");
+        }
         Patient patient = new Patient(); //todo: похже изменить работу с введением sequrity
         DoctorsSpecialization specialization =
             doctorSpecializationRepository.findById(specializationId).orElseThrow(() -> {
-                throw new RuntimeException("doctors specialization not found");//todo: обработать
+                throw new DoctorSpecializationNotFoundException("doctors specialization with id " +
+                        specializationId +
+                        " not found");
             });
 
         TypeOfAppointment typeOfAppointment =
             typeOfAppointmentRepository.findById(appointmentTypeId).orElseThrow(() -> {
-                throw new RuntimeException("type of appointment not found");//todo: обработать
+                throw new TypeOfAppointmentNotFoundException("type of appointment with id " +
+                        appointmentTypeId +
+                        " not found");
             });
 
         List<Doctor> doctors = doctorService.getDoctorForAppointmentsRecordByDate(date.getDayOfWeek(),
