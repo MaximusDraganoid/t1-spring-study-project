@@ -14,6 +14,10 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
+    public Optional<User> findByName(String name) {
+        return userRepository.findByName(name);
+    }
+
     public Optional<User> findByLogin(String login) {
         return userRepository.findByLogin(login);
     }
