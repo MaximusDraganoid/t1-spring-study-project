@@ -4,7 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import ru.maslov.springstudyprpject.entities.*;
 import ru.maslov.springstudyprpject.repositories.*;
 
@@ -29,7 +31,10 @@ public class CommandLineAppStartUpDataLoader implements CommandLineRunner {
 
     private UserRepository userRepository;
 
+    private PasswordEncoder passwordEncoder;
+
     @Override
+    @Transactional
     public void run(String... args) {
         Pageable pageable = PageRequest.of(0, 1);
 
@@ -64,7 +69,7 @@ public class CommandLineAppStartUpDataLoader implements CommandLineRunner {
                     "Админович",
                     "Админов",
                     "great_admin",
-                    "admin_is_god",
+                    passwordEncoder.encode("admin_is_god"),
                     "79999999999",
                     List.of(Role.ADMIN));
             userRepository.save(adminUser);
@@ -75,7 +80,7 @@ public class CommandLineAppStartUpDataLoader implements CommandLineRunner {
                     "Сергеевич",
                     "Тюрин",
                     "tuirnis",
-                    "1vaN",
+                    passwordEncoder.encode("1vaN"),
                     "79106272030",
                     List.of(Role.PATIENT),
                     "1234567890123456",
@@ -85,7 +90,7 @@ public class CommandLineAppStartUpDataLoader implements CommandLineRunner {
                     "Максимович",
                     "Шумилов",
                     "shumilovam",
-                    "shum12",
+                    passwordEncoder.encode("shum12"),
                     "79106272031",
                     List.of(Role.PATIENT),
                     "1234567890123457",
@@ -95,7 +100,7 @@ public class CommandLineAppStartUpDataLoader implements CommandLineRunner {
                     "Александрович",
                     "Шубин",
                     "root",
-                    "mafioz67",
+                    passwordEncoder.encode("mafioz67"),
                     "79106272032",
                     List.of(Role.PATIENT),
                     "1234567890123458",
@@ -112,7 +117,7 @@ public class CommandLineAppStartUpDataLoader implements CommandLineRunner {
                     "Иванович",
                     "Иванов",
                     "ivanovii",
-                    "ai_is_coming",
+                    passwordEncoder.encode("ai_is_coming"),
                     "79106272033",
                     List.of(Role.DOCTOR),
                     specializations.get(0),
@@ -123,7 +128,7 @@ public class CommandLineAppStartUpDataLoader implements CommandLineRunner {
                     "Петрович",
                     "Селедкин",
                     "seledkinpp",
-                    "drop_the_data",
+                    passwordEncoder.encode("drop_the_data"),
                     "79106272035",
                     List.of(Role.DOCTOR, Role.MAIN_DOCTOR),
                     specializations.get(1),
@@ -134,7 +139,7 @@ public class CommandLineAppStartUpDataLoader implements CommandLineRunner {
                     "Петрович",
                     "Екатин",
                     "ekatinsp",
-                    "drop_the_data",
+                    passwordEncoder.encode("drop_the_data"),
                     "79106272335",
                     List.of(Role.DOCTOR),
                     specializations.get(2),
@@ -145,7 +150,7 @@ public class CommandLineAppStartUpDataLoader implements CommandLineRunner {
                     "Евгеньевич",
                     "Бахтин",
                     "bachtinke",
-                    "drop_the_data",
+                    passwordEncoder.encode("drop_the_data"),
                     "79106372335",
                     List.of(Role.DOCTOR),
                     specializations.get(2),
@@ -176,7 +181,7 @@ public class CommandLineAppStartUpDataLoader implements CommandLineRunner {
                     thirdDoctorScheduleFirstDay, thirdDoctorScheduleSecondDay,
                     thirdDoctorScheduleThirdDay, fourthDoctorScheduleFirstDay,
                     fourthDoctorScheduleSecondDay, fourthDoctorScheduleThirdDay
-                    ));
+            ));
         }
     }
 
@@ -208,6 +213,11 @@ public class CommandLineAppStartUpDataLoader implements CommandLineRunner {
     @Autowired
     public void setUserRepository(UserRepository userRepository) {
         this.userRepository = userRepository;
+    }
+
+    @Autowired
+    public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
     }
 
     private DoctorsSchedule initFirstHalfDay(Doctor doctor, DayOfWeek dayOfWeek) {

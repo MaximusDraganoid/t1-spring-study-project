@@ -32,14 +32,12 @@ public class User {
     @Length(min = 3, max = 14)
     private String login;
 
-    @Pattern(regexp = "[A-Za-z1-9-_]*")
-    @Length(min = 3, max = 15)
     private String password;
 
     @Pattern(regexp = "[7|8][0-9]{10}")
     private String phoneNumber;
 
-    @ElementCollection(targetClass = Role.class)
+    @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "user_roles")
     @Column(name = "role")
     @Enumerated(EnumType.STRING)
