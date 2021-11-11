@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -27,10 +28,11 @@ public class Doctor extends User {
                   String login,
                   String password,
                   String phoneNumber,
+                  Collection<Role> roles,
                   DoctorsSpecialization specialization,
                   List<DoctorsSchedule> scheduleList,
                   Set<Appointment> appointments) {
-        super(name, patronymic, surname, login, password, phoneNumber);
+        super(name, patronymic, surname, login, password, phoneNumber, roles);
         this.specialization = specialization;
         this.scheduleList = scheduleList;
         this.appointments = appointments;

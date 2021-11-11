@@ -4,10 +4,12 @@ import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import javax.validation.constraints.Pattern;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Objects;
 
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED)
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @Table(name = "users")
 public class User {
     @Id
@@ -37,6 +39,12 @@ public class User {
     @Pattern(regexp = "[7|8][0-9]{10}")
     private String phoneNumber;
 
+    @ElementCollection(targetClass = Role.class)
+    @CollectionTable(name = "user_roles")
+    @Column(name = "role")
+    @Enumerated(EnumType.STRING)
+    private Collection<Role> roles = new ArrayList<>();
+
     public User() {
     }
 
@@ -45,13 +53,15 @@ public class User {
                 String surname,
                 String login,
                 String password,
-                String phoneNumber) {
+                String phoneNumber,
+                Collection<Role> roles) {
         this.name = name;
         this.patronymic = patronymic;
         this.surname = surname;
         this.login = login;
         this.password = password;
         this.phoneNumber = phoneNumber;
+        this.roles = roles;
     }
 
     public Long getId() {
@@ -108,6 +118,14 @@ public class User {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public Collection<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Collection<Role> roles) {
+        this.roles = roles;
     }
 
     @Override

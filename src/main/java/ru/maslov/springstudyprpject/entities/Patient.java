@@ -3,6 +3,7 @@ package ru.maslov.springstudyprpject.entities;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Pattern;
+import java.util.Collection;
 import java.util.Set;
 
 @Entity
@@ -21,9 +22,10 @@ public class Patient extends User{
                    String login,
                    String password,
                    String phoneNumber,
+                   Collection<Role> roles,
                    String policyNumber,
                    Set<Appointment> appointmentSet) {
-        super(name, patronymic, surname, login, password, phoneNumber);
+        super(name, patronymic, surname, login, password, phoneNumber, roles);
         this.policyNumber = policyNumber;
         this.appointmentSet = appointmentSet;
     }

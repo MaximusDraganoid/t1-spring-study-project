@@ -26,6 +26,7 @@ public class CommandLineAppStartUpDataLoader implements CommandLineRunner {
 
     private DoctorScheduleRepository doctorScheduleRepository;
 
+    private UserRepository userRepository;
 
     @Override
     public void run(String... args) {
@@ -57,6 +58,17 @@ public class CommandLineAppStartUpDataLoader implements CommandLineRunner {
             doctorSpecializationRepository.saveAll(List.of(surgeon, optometrist, therapist));
         }
 
+        if (userRepository.findAll(pageable).getTotalElements() == 0) {
+            User adminUser = new User("Виталий",
+                    "Админович",
+                    "Админов",
+                    "great_admin",
+                    "admin_is_god",
+                    "79999999999",
+                    List.of(Role.ADMIN));
+            userRepository.save(adminUser);
+        }
+
         if (patientRepository.findAll(pageable).getTotalElements() == 0) {
             Patient firstPatient = new Patient("Иван",
                     "Сергеевич",
@@ -64,6 +76,7 @@ public class CommandLineAppStartUpDataLoader implements CommandLineRunner {
                     "tuirnis",
                     "1vaN",
                     "79106272030",
+                    List.of(Role.PATIENT),
                     "1234567890123456",
                     new HashSet<>());
 
@@ -73,6 +86,7 @@ public class CommandLineAppStartUpDataLoader implements CommandLineRunner {
                     "shumilovam",
                     "shum12",
                     "79106272031",
+                    List.of(Role.PATIENT),
                     "1234567890123457",
                     new HashSet<>());
 
@@ -82,8 +96,10 @@ public class CommandLineAppStartUpDataLoader implements CommandLineRunner {
                     "root",
                     "mafioz67",
                     "79106272032",
+                    List.of(Role.PATIENT),
                     "1234567890123458",
                     new HashSet<>());
+
 
             patientRepository.saveAll(List.of(firstPatient, secondPatient, thirdPatient));
         }
@@ -97,6 +113,7 @@ public class CommandLineAppStartUpDataLoader implements CommandLineRunner {
                     "ivanovii",
                     "ai_is_coming",
                     "79106272033",
+                    List.of(Role.DOCTOR),
                     specializations.get(0),
                     new LinkedList<>(),
                     new HashSet<>());
@@ -107,6 +124,7 @@ public class CommandLineAppStartUpDataLoader implements CommandLineRunner {
                     "seledkinpp",
                     "drop_the_data",
                     "79106272035",
+                    List.of(Role.DOCTOR, Role.MAIN_DOCTOR),
                     specializations.get(1),
                     new LinkedList<>(),
                     new HashSet<>());
@@ -117,6 +135,7 @@ public class CommandLineAppStartUpDataLoader implements CommandLineRunner {
                     "ekatinsp",
                     "drop_the_data",
                     "79106272335",
+                    List.of(Role.DOCTOR),
                     specializations.get(2),
                     new LinkedList<>(),
                     new HashSet<>());
@@ -127,6 +146,7 @@ public class CommandLineAppStartUpDataLoader implements CommandLineRunner {
                     "bachtinke",
                     "drop_the_data",
                     "79106372335",
+                    List.of(Role.DOCTOR),
                     specializations.get(2),
                     new LinkedList<>(),
                     new HashSet<>());
@@ -182,6 +202,11 @@ public class CommandLineAppStartUpDataLoader implements CommandLineRunner {
     @Autowired
     public void setDoctorScheduleRepository(DoctorScheduleRepository doctorScheduleRepository) {
         this.doctorScheduleRepository = doctorScheduleRepository;
+    }
+
+    @Autowired
+    public void setUserRepository(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     private DoctorsSchedule initFirstHalfDay(Doctor doctor, DayOfWeek dayOfWeek) {
