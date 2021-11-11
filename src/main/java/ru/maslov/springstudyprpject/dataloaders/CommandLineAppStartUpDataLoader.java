@@ -16,6 +16,7 @@ import java.util.*;
 @Component
 public class CommandLineAppStartUpDataLoader implements CommandLineRunner {
 
+    //todo: заменить на сервисы!
     private DoctorSpecializationRepository doctorSpecializationRepository;
 
     private TypeOfAppointmentRepository typeOfAppointmentRepository;

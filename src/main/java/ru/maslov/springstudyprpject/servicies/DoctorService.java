@@ -1,6 +1,6 @@
 package ru.maslov.springstudyprpject.servicies;
 
-import org.springframework.data.repository.query.Param;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.maslov.springstudyprpject.entities.Doctor;
 import ru.maslov.springstudyprpject.entities.DoctorsSpecialization;
@@ -15,12 +15,13 @@ import java.util.List;
 public class DoctorService {
 
     private final DoctorRepository doctorRepository;
-
     private final UserService userService;
+    private final PasswordEncoder passwordEncoder;
 
-    public DoctorService(DoctorRepository doctorRepository, UserService userService) {
+    public DoctorService(DoctorRepository doctorRepository, UserService userService, PasswordEncoder passwordEncoder) {
         this.doctorRepository = doctorRepository;
         this.userService = userService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public List<Doctor> getList() {
@@ -49,7 +50,7 @@ public class DoctorService {
             throw new DoctorDataValidationException("phone number "
                     + doctor.getPhoneNumber() + " exist in base");
         }
-
+        doctor.setPassword(passwordEncoder.encode(doctor.getPassword()));
         return doctorRepository.save(doctor);
     }
 

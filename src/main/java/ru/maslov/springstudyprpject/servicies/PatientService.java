@@ -1,5 +1,6 @@
 package ru.maslov.springstudyprpject.servicies;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.maslov.springstudyprpject.entities.Patient;
 import ru.maslov.springstudyprpject.exceptions.PatientDataValidationException;
@@ -12,10 +13,12 @@ import java.util.List;
 public class PatientService {
     private final PatientRepository patientRepository;
     private final UserService userService;
+    private final PasswordEncoder passwordEncoder;
 
-    public PatientService(PatientRepository patientRepository, UserService userService) {
+    public PatientService(PatientRepository patientRepository, UserService userService, PasswordEncoder passwordEncoder) {
         this.patientRepository = patientRepository;
         this.userService = userService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public List<Patient> getPatients() {
@@ -60,6 +63,7 @@ public class PatientService {
                     + patient.getPolicyNumber() + " already exists");
         }
 
+        patient.setPassword(passwordEncoder.encode(patient.getPassword()));
         return patientRepository.save(patient);
     }
 }
