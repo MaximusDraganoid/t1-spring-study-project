@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 @Validated
 @RestController
-@RequestMapping(path = "appointment")
+@RequestMapping(path = "appointments")
 public class AppointmentController {
 
     private final AppointmentService appointmentService;
