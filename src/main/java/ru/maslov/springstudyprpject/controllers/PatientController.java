@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 @Validated
 @RestController
-@RequestMapping(path = "patients")
+@RequestMapping(path = "/patients")
 public class PatientController {
 
     private final PatientMapper mapper;
@@ -48,6 +48,11 @@ public class PatientController {
     @DeleteMapping(path = "/{id}")
     public void deleteById(@PathVariable("id") @NotNull Long id) {
         patientService.deleteById(id);
+    }
+
+    @PutMapping
+    public Patient changePatientData(@RequestBody Patient patient) {
+        return null;
     }
 
     @PostMapping

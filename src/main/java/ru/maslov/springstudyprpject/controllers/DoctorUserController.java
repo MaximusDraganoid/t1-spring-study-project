@@ -1,12 +1,11 @@
 package ru.maslov.springstudyprpject.controllers;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.maslov.springstudyprpject.dto.AppointmentDTO;
 import ru.maslov.springstudyprpject.dto.DoctorDTO;
+import ru.maslov.springstudyprpject.dto.PatientDTO;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @RestController
@@ -60,8 +59,22 @@ public class DoctorUserController {
     /**
      * Метод для изменения описания приема врачом
      */
+    @PutMapping(path = "/appointments/description")
     public AppointmentDTO changeAppointmentDescription() {
 
         return null;
     }
+
+    /**
+     * Метод для того, чтобы врач мог назначать прием пациенту
+     * @param appointmentDTO
+     * @return
+     */
+    @PostMapping(path = "/appointments")
+    public AppointmentDTO createAppointmentForUser(@RequestBody AppointmentDTO appointmentDTO) {
+
+        return null;
+    }
+
+
 }

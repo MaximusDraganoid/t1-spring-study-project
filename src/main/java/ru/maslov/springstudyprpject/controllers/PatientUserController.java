@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.maslov.springstudyprpject.dto.AppointmentDTO;
 import ru.maslov.springstudyprpject.dto.PatientDTO;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -36,12 +37,41 @@ public class PatientUserController {
     }
 
     /**
-     * Возвращает список приемов, на которые записан пациент
+     * Возвращает список приемов, на которые записан пациент (как историю приемов, так и только актуальные)
+     *
      * @return List<AppointmentDTO>
      */
     @GetMapping(path = "/appointments")
-    public List<AppointmentDTO> getAppointmentsOfPatient() {
+    public List<AppointmentDTO> getAppointmentsOfPatient(@RequestParam("onlyActual") Boolean actual) {
 
+        return null;
+    }
+
+    /**
+     * Пользователь может отменить прием
+     * @param id
+     */
+    @DeleteMapping(path = "/appointments")
+    public void denyAppointment(@RequestParam("appointment_id") Long id) {
+
+    }
+
+    /**
+     * Возвращает список возможных приемов на указанную дату к указанному специалисту на указанный тип приема (? - по идее
+     * тип приема определяет врач, поэтому здесь должно осуществляться первичное врачебное вмещательство -
+     * типа приема/консультации, поэтому есть смысл выбрасывать исключении, если передается тип Operation
+     * todo: перенести логику работы из AppointmentController
+     */
+    @GetMapping(path = "/appointments/booking")
+    public List<AppointmentDTO> getAppointmentBySpecializationAndData(@RequestParam("spec_id") @NotNull Long specializationId,
+                                                                      @RequestParam("data") @NotNull String date,
+                                                                      @RequestParam("appointment_type_id") @NotNull Long appointmentTypeId) {
+
+        return null;
+    }
+
+    @PostMapping(path = "/appointments/booking")
+    public AppointmentDTO createAppointment (@RequestBody AppointmentDTO appointmentDTO) {
         return null;
     }
 }

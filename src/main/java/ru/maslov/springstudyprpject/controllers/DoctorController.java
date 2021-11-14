@@ -15,7 +15,7 @@ import java.util.List;
 
 @Validated
 @RestController
-@RequestMapping(path = "doctors")
+@RequestMapping(path = "/doctors")
 public class DoctorController {
 
     private final DoctorService doctorService;
@@ -24,6 +24,7 @@ public class DoctorController {
         this.doctorService = doctorService;
     }
 
+    //todo: добавить пагинацию
     @GetMapping
     public List<Doctor> getDoctorsList() {
         return doctorService.getList();
@@ -32,6 +33,14 @@ public class DoctorController {
     @GetMapping(path = "/{id}")
     public Doctor getDoctorById(@PathVariable("id") @NotNull Long id) {
         return doctorService.getById(id);
+    }
+
+    /**
+     * Метод для изменения данных о враче - доступен только для главрача
+     */
+    @PutMapping(path = "/{id}")
+    public Doctor changeDoctorById(@RequestBody Doctor doctor) {
+        return null;
     }
 
     @DeleteMapping(path = "/{id}")
