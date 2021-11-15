@@ -1,5 +1,7 @@
 package ru.maslov.springstudyprpject.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Pattern;
@@ -11,6 +13,7 @@ public class Patient extends User{
     @Pattern(regexp = "[0-9]{16}")
     private String policyNumber;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "patient")
     private Set<Appointment> appointmentSet;
 

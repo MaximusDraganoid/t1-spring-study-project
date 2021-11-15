@@ -9,10 +9,7 @@ import ru.maslov.springstudyprpject.repositories.AppointmentRepository;
 import ru.maslov.springstudyprpject.repositories.DoctorSpecializationRepository;
 import ru.maslov.springstudyprpject.repositories.TypeOfAppointmentRepository;
 
-import java.time.DayOfWeek;
-import java.time.Duration;
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.*;
 import java.time.format.DateTimeParseException;
 import java.util.*;
 
@@ -25,22 +22,30 @@ public class AppointmentService {
     private final TypeOfAppointmentRepository typeOfAppointmentRepository;
 
     private final DoctorService doctorService;
+    private final PatientService patientService;
 
     public AppointmentService(AppointmentRepository appointmentRepository,
                               DoctorSpecializationRepository doctorSpecializationRepository,
                               TypeOfAppointmentRepository typeOfAppointmentRepository,
-                              DoctorService doctorService) {
+                              DoctorService doctorService,
+                              PatientService patientService) {
         this.appointmentRepository = appointmentRepository;
         this.doctorSpecializationRepository = doctorSpecializationRepository;
         this.typeOfAppointmentRepository = typeOfAppointmentRepository;
         this.doctorService = doctorService;
+        this.patientService = patientService;
     }
 
     public Set<Appointment> findAppointmentByPatientId(Long id) {
         return appointmentRepository.findAppointmentByPatientId(id);
     }
 
+    public Set<Appointment> findActualAppointmentByPatientId(Long id) {
+        return appointmentRepository.findActualAppointments(id, LocalDateTime.now());
+    }
+
     public Appointment createAppointment(Appointment appointment) {
+
         return appointmentRepository.save(appointment);
     }
 
@@ -57,7 +62,7 @@ public class AppointmentService {
                     + data
                     + " not supported");
         }
-        Patient patient = new Patient(); //todo: похже изменить работу с введением sequrity
+        Patient patient = patientService.getSelfInfo();
         DoctorsSpecialization specialization =
                 doctorSpecializationRepository.findById(specializationId).orElseThrow(() -> {
                     throw new DoctorSpecializationNotFoundException("doctors specialization with id " +
@@ -92,7 +97,6 @@ public class AppointmentService {
             do {
                 if (startWorkTime.plus(typeOfAppointment.getDuration()).isBefore(finishWorkTime)
                         || startWorkTime.plus(typeOfAppointment.getDuration()).equals(finishWorkTime)) {
-                    //todo: проверка на то не пересекается ли данный промежуто времени с другими приемами врача
                     if (!isCrossingAppointments(sortedDoctorsAppointmentSet.iterator(),
                             startWorkTime,
                             typeOfAppointment.getDuration())) {

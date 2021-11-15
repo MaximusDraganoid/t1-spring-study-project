@@ -3,9 +3,16 @@ package ru.maslov.springstudyprpject.controllers;
 import org.springframework.web.bind.annotation.*;
 import ru.maslov.springstudyprpject.dto.AppointmentDTO;
 import ru.maslov.springstudyprpject.dto.PatientDTO;
+import ru.maslov.springstudyprpject.dto.mappers.AppointmentMapper;
+import ru.maslov.springstudyprpject.dto.mappers.PatientMapper;
+import ru.maslov.springstudyprpject.entities.Appointment;
+import ru.maslov.springstudyprpject.entities.Patient;
+import ru.maslov.springstudyprpject.servicies.PatientService;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Посредством этого класса пациент будет взаимодействовать со своей персональной информацией. Разделение сделано с целью,
@@ -18,22 +25,29 @@ import java.util.List;
 @RequestMapping(path = "/patient_info")
 public class PatientUserController {
 
-    @GetMapping
-    public PatientDTO getPatientInfo() {
+    private final PatientService patientService;
+    private final PatientMapper patientMapper;
+    private final AppointmentMapper appointmentMapper;
 
-        return null;
+    public PatientUserController(PatientService patientService, PatientMapper patientMapper, AppointmentMapper appointmentMapper) {
+        this.patientService = patientService;
+        this.patientMapper = patientMapper;
+        this.appointmentMapper = appointmentMapper;
+    }
+
+    @GetMapping
+    public Patient getPatientInfo() {
+        return patientService.getSelfInfo();
     }
 
     @PutMapping
-    public PatientDTO changePatientInfo() {
-
-        return null;
+    public Patient changeSelfPatientInfo(@RequestBody Patient updatedPatient) {
+        return patientService.changeSelfPatientInfo(updatedPatient);
     }
 
     @DeleteMapping
-    public PatientDTO deletePatientFromSystem() {
-
-        return null;
+    public Patient deletePatientFromSystem() {
+        return patientService.selfDeleteUser();
     }
 
     /**
@@ -43,35 +57,39 @@ public class PatientUserController {
      */
     @GetMapping(path = "/appointments")
     public List<AppointmentDTO> getAppointmentsOfPatient(@RequestParam("onlyActual") Boolean actual) {
-
-        return null;
+        return patientService.getSelfAppointments(actual)
+                .stream().map(appointmentMapper::toAppointmentDTO)
+                .collect(Collectors.toList());
     }
 
     /**
      * Пользователь может отменить прием
-     * @param id
+     * @param id - id отменяемого приема
      */
     @DeleteMapping(path = "/appointments")
     public void denyAppointment(@RequestParam("appointment_id") Long id) {
-
+        //todo:
     }
 
     /**
      * Возвращает список возможных приемов на указанную дату к указанному специалисту на указанный тип приема (? - по идее
      * тип приема определяет врач, поэтому здесь должно осуществляться первичное врачебное вмещательство -
      * типа приема/консультации, поэтому есть смысл выбрасывать исключении, если передается тип Operation
-     * todo: перенести логику работы из AppointmentController
      */
     @GetMapping(path = "/appointments/booking")
     public List<AppointmentDTO> getAppointmentBySpecializationAndData(@RequestParam("spec_id") @NotNull Long specializationId,
                                                                       @RequestParam("data") @NotNull String date,
                                                                       @RequestParam("appointment_type_id") @NotNull Long appointmentTypeId) {
-
-        return null;
+        Set<Appointment> appointments = patientService.getAppointmentsForBooking(specializationId, date, appointmentTypeId);
+        return appointments
+                .stream()
+                .map(appointmentMapper::toAppointmentDTO)
+                .collect(Collectors.toList());
     }
 
     @PostMapping(path = "/appointments/booking")
     public AppointmentDTO createAppointment (@RequestBody AppointmentDTO appointmentDTO) {
-        return null;
+        Appointment appointment = patientService.createAppointmentForPatient(appointmentMapper.toAppointment(appointmentDTO));
+        return appointmentMapper.toAppointmentDTO(appointment);
     }
 }
