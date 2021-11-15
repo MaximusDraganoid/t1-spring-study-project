@@ -3,6 +3,7 @@ package ru.maslov.springstudyprpject.servicies;
 import org.springframework.stereotype.Service;
 import ru.maslov.springstudyprpject.entities.*;
 import ru.maslov.springstudyprpject.exceptions.AppointmentDateFormatException;
+import ru.maslov.springstudyprpject.exceptions.AppointmentNotFoundException;
 import ru.maslov.springstudyprpject.exceptions.DoctorSpecializationNotFoundException;
 import ru.maslov.springstudyprpject.exceptions.TypeOfAppointmentNotFoundException;
 import ru.maslov.springstudyprpject.repositories.AppointmentRepository;
@@ -36,15 +37,25 @@ public class AppointmentService {
         this.patientService = patientService;
     }
 
+    public Appointment findAppointmentById(Long id) {
+        return appointmentRepository.findById(id).orElseThrow(() -> {
+            throw new AppointmentNotFoundException("appointment with id " + id + " not found");
+        });
+    }
+
     public Set<Appointment> findAppointmentByPatientId(Long id) {
         return appointmentRepository.findAppointmentByPatientId(id);
     }
 
     public Set<Appointment> findActualAppointmentByPatientId(Long id) {
-        return appointmentRepository.findActualAppointments(id, LocalDateTime.now());
+        return appointmentRepository.findActualAppointmentsForPatients(id, LocalDateTime.now());
     }
 
-    public Appointment createAppointment(Appointment appointment) {
+    public Set<Appointment> findActualAppointmentByDoctor(Doctor doctor) {
+        return appointmentRepository.findActualAppointmentsForDoctor(doctor, LocalDateTime.now());
+    }
+
+    public Appointment saveAppointment(Appointment appointment) {
 
         return appointmentRepository.save(appointment);
     }

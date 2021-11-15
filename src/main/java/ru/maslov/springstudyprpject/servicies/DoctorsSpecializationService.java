@@ -2,9 +2,11 @@ package ru.maslov.springstudyprpject.servicies;
 
 import org.springframework.stereotype.Service;
 import ru.maslov.springstudyprpject.entities.DoctorsSpecialization;
+import ru.maslov.springstudyprpject.exceptions.DoctorSpecializationNotFoundException;
 import ru.maslov.springstudyprpject.repositories.DoctorSpecializationRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class DoctorsSpecializationService {
@@ -17,5 +19,12 @@ public class DoctorsSpecializationService {
 
     public List<DoctorsSpecialization> getAllSpecializations() {
         return doctorSpecializationRepository.findAll();
+    }
+
+    public DoctorsSpecialization findById(Long id) {
+        return doctorSpecializationRepository.findById(id).orElseThrow(() -> {
+            throw new DoctorSpecializationNotFoundException("specialization with id " + id + " not found in db.");
+        });
+
     }
 }

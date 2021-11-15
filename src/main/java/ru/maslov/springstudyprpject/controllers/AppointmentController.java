@@ -43,7 +43,7 @@ public class AppointmentController {
 
     @PostMapping
     public AppointmentDTO createAppointment(@RequestBody AppointmentDTO appointmentDTO) {
-        Appointment appointment = appointmentService.createAppointment(mapper.toAppointment(appointmentDTO));
+        Appointment appointment = appointmentService.saveAppointment(mapper.toAppointment(appointmentDTO));
         return mapper.toAppointmentDTO(appointment);
     }
 

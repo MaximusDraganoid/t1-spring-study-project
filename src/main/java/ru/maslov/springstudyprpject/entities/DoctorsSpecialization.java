@@ -1,6 +1,7 @@
 package ru.maslov.springstudyprpject.entities;
 
 import javax.persistence.*;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -43,5 +44,25 @@ public class DoctorsSpecialization {
 
     public void setTypeOfAppointmentSet(Set<TypeOfAppointment> typeOfAppointmentSet) {
         this.typeOfAppointmentSet = typeOfAppointmentSet;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        DoctorsSpecialization that = (DoctorsSpecialization) o;
+
+        if (!Objects.equals(id, that.id)) return false;
+        if (!Objects.equals(name, that.name)) return false;
+        return Objects.equals(typeOfAppointmentSet, that.typeOfAppointmentSet);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (typeOfAppointmentSet != null ? typeOfAppointmentSet.hashCode() : 0);
+        return result;
     }
 }

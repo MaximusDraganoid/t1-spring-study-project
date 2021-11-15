@@ -1,5 +1,7 @@
 package ru.maslov.springstudyprpject.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
@@ -11,6 +13,7 @@ public class DoctorsSchedule {
     private Long id;
 
     @ManyToOne
+    @JsonIgnore
     private Doctor doctor;
 
     private DayOfWeek dayOfWeek;

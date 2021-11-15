@@ -4,29 +4,58 @@ import org.springframework.web.bind.annotation.*;
 import ru.maslov.springstudyprpject.dto.AppointmentDTO;
 import ru.maslov.springstudyprpject.dto.DoctorDTO;
 import ru.maslov.springstudyprpject.dto.PatientDTO;
+import ru.maslov.springstudyprpject.dto.mappers.AppointmentMapper;
+import ru.maslov.springstudyprpject.dto.mappers.DoctorMapper;
+import ru.maslov.springstudyprpject.entities.Doctor;
+import ru.maslov.springstudyprpject.entities.DoctorsSchedule;
+import ru.maslov.springstudyprpject.servicies.DoctorService;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(path = "/doctor_info")
 public class DoctorUserController {
+
+    private final DoctorService doctorService;
+    private final AppointmentMapper appointmentMapper;
+    private final DoctorMapper doctorMapper;
+
+    public DoctorUserController(DoctorService doctorService, AppointmentMapper appointmentMapper, DoctorMapper doctorMapper) {
+        this.doctorService = doctorService;
+        this.appointmentMapper = appointmentMapper;
+        this.doctorMapper = doctorMapper;
+    }
+
     /**
      * Получение информации врача о самом себе
      * @return DoctorDTO
      */
     @GetMapping
-    public DoctorDTO getDoctorInfo() {
-        return null;
+    public Doctor getDoctorInfo() {
+        return doctorService.getSelfInfo();
     }
 
     /**
      * Измененеи информации врача о самом себе. Метод возвращает изменную информацию о самом себе
-     * @return DoctorDTO
      */
     @PutMapping
-    public DoctorDTO changeDoctorInfo() {
-        return null;
+    public Doctor changeDoctorInfo(@RequestBody Doctor doctor) {
+        return doctorService.changeSelfInfo(doctor);
+    }
+
+
+    @GetMapping(path = "/schedule")
+    public List<DoctorsSchedule> getScheduleList() {
+        return doctorService.getSelfSchedule();
+    }
+
+    @PutMapping(path = "/schedule")
+    public List<DoctorsSchedule> updateScheduleList(@RequestBody List<DoctorsSchedule> doctorsSchedules) {
+        //todo:
+        return doctorService.updateSchedule(doctorsSchedules);
     }
 
     /**
@@ -34,35 +63,39 @@ public class DoctorUserController {
      * @return List<AppointmentDTO>
      */
     @GetMapping(path = "/appointments")
-    public List<AppointmentDTO> getAppointmentsOfDoctor() {
-
-        return null;
+    public Set<AppointmentDTO> getAppointmentsOfDoctor() {
+        return doctorService.getSelfAppointments()
+                .stream()
+                .map(appointmentMapper::toAppointmentDTO)
+                .collect(Collectors.toSet());
     }
 
     /**
      * Метод для изменения статуса приема
      */
-    @PutMapping(path = "/appointments/status")
-    public AppointmentDTO changeAppointmentStatus() {
-        return null;
+    @PutMapping(path = "/appointments/{id}/status")
+    public AppointmentDTO changeAppointmentStatus(@PathVariable("id")@NotNull Long appointmentId,
+                                                  @RequestParam("status_name") @NotNull String statusName) {
+        return appointmentMapper.toAppointmentDTO(doctorService.changeAppointmentStatus(appointmentId, statusName));
     }
 
     /**
      * Метод для переноса записи врачом
      */
-    @PutMapping(path = "/appointments/date")
-    public AppointmentDTO changeAppointmentDateTime() {
-
-        return null;
+    @PutMapping(path = "/appointments/{id}/date")
+    public AppointmentDTO changeAppointmentDateTime(@PathVariable("id") @NotNull Long appointmentId,
+                                                    @RequestParam("date_time") @NotNull String dateTime) {
+        doctorService.changeDateOfAppointment(appointmentId, dateTime);
+        return appointmentMapper.toAppointmentDTO(doctorService.changeDateOfAppointment(appointmentId, dateTime));
     }
 
     /**
      * Метод для изменения описания приема врачом
      */
-    @PutMapping(path = "/appointments/description")
-    public AppointmentDTO changeAppointmentDescription() {
-
-        return null;
+    @PutMapping(path = "/appointments/{id}/description")
+    public AppointmentDTO changeAppointmentDescription(@PathVariable("id") @NotNull Long appointmentId,
+                                                       @RequestBody @NotNull String description) {
+        return appointmentMapper.toAppointmentDTO(doctorService.changeDescriptionOfAppointment(appointmentId, description));
     }
 
     /**
@@ -71,10 +104,27 @@ public class DoctorUserController {
      * @return
      */
     @PostMapping(path = "/appointments")
-    public AppointmentDTO createAppointmentForUser(@RequestBody AppointmentDTO appointmentDTO) {
+    public AppointmentDTO assignAppointmentForPatient (@RequestBody AppointmentDTO appointmentDTO) {
+        //todo:
+        return appointmentMapper.toAppointmentDTO(doctorService.assignAppointmentForPatient(appointmentMapper.toAppointment(appointmentDTO)));
+    }
 
+    /**
+     * Получение списка всех пациентов врача
+     */
+    @GetMapping(path = "/patients")
+    public List<PatientDTO> getPatientsOfDoctor() {
+        //todo:
+        doctorService.getDoctorsPatients();
         return null;
     }
 
-
+    /**
+     * Получение истории премов данного пациента
+     */
+    @GetMapping(path = "/patients/{id}")
+    public List<AppointmentDTO> getPatientsAppointmentsHistory(@PathVariable("id") Long id) {
+        //todo:
+        return null;
+    }
 }

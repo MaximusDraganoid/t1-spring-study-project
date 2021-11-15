@@ -1,5 +1,7 @@
 package ru.maslov.springstudyprpject.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -18,6 +20,7 @@ public class Doctor extends User {
     private List<DoctorsSchedule> scheduleList;
 
     @OneToMany(mappedBy = "doctor")
+    @JsonIgnore
     private Set<Appointment> appointments;
 
     public Doctor() {}

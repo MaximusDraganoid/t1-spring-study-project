@@ -4,15 +4,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 import ru.maslov.springstudyprpject.entities.Appointment;
 import ru.maslov.springstudyprpject.entities.Patient;
 import ru.maslov.springstudyprpject.exceptions.PatientDataValidationException;
 import ru.maslov.springstudyprpject.exceptions.PatientNotFoundException;
 import ru.maslov.springstudyprpject.repositories.PatientRepository;
 
-import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -118,6 +115,10 @@ public class PatientService {
         return changePatientData(patient, updatedPatient);
     }
 
+    public Appointment createAppointmentForPatient(Appointment appointment) {
+        return appointmentService.saveAppointment(appointment);
+    }
+
     private Patient changePatientData(Patient patient, Patient updatedPatient) {
 
         patient.setName(updatedPatient.getName());
@@ -131,10 +132,6 @@ public class PatientService {
             }
 
             patient.setLogin(updatedPatient.getLogin());
-        }
-
-        if (!patient.getPassword().equals(updatedPatient.getPassword())) {
-            patient.setPassword(passwordEncoder.encode(updatedPatient.getPassword()));
         }
 
         if (!patient.getPhoneNumber().equals(updatedPatient.getPhoneNumber())) {
@@ -157,7 +154,4 @@ public class PatientService {
         return patientRepository.save(patient);
     }
 
-    public Appointment createAppointmentForPatient(Appointment appointment) {
-        return appointmentService.createAppointment(appointment);
-    }
 }

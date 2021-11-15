@@ -5,6 +5,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.time.Duration;
+import java.util.Objects;
 
 @Entity
 public class TypeOfAppointment {
@@ -45,5 +46,25 @@ public class TypeOfAppointment {
 
     public void setDuration(Duration duration) {
         this.duration = duration;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        TypeOfAppointment that = (TypeOfAppointment) o;
+
+        if (!Objects.equals(id, that.id)) return false;
+        if (!Objects.equals(name, that.name)) return false;
+        return Objects.equals(duration, that.duration);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (duration != null ? duration.hashCode() : 0);
+        return result;
     }
 }

@@ -8,6 +8,7 @@ import ru.maslov.springstudyprpject.entities.DoctorsSpecialization;
 
 import java.time.DayOfWeek;
 import java.util.List;
+import java.util.Optional;
 
 public interface DoctorRepository extends JpaRepository<Doctor, Long> {
 
@@ -17,4 +18,7 @@ public interface DoctorRepository extends JpaRepository<Doctor, Long> {
             "WHERE dsch.dayOfWeek = :dayOfWeek AND d.specialization = :specialization")
     List<Doctor> getDoctorForAppointmentsRecordByDate(@Param("dayOfWeek")DayOfWeek dayOfWeek,
                                                       @Param("specialization")DoctorsSpecialization specialization);
+    Optional<Doctor> findByLogin(String login);
+    Optional<Doctor> findByPhoneNumber(String phoneNumber);
+
 }
