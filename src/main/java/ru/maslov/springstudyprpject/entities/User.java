@@ -3,6 +3,7 @@ package ru.maslov.springstudyprpject.entities;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,27 +14,34 @@ import java.util.Objects;
 @Table(name = "users")
 public class User {
     @Id
+    @NotNull
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @NotNull
     @Pattern(regexp = "[А-Я][а-я-]+")
     @Length(min = 2, max = 40)
     private String name;
 
+    @NotNull
     @Pattern(regexp = "[А-Я][а-я-]+")
     @Length(min = 2, max = 40)
     private String patronymic;
 
+    @NotNull
     @Pattern(regexp = "[А-Я][а-я-]+")
     @Length(min = 2, max = 40)
     private String surname;
 
+    @NotNull
     @Pattern(regexp = "[a-zA-Z][A-Za-z1-9-_]*")
     @Length(min = 3, max = 14)
     private String login;
 
+    @NotNull
     private String password;
 
+    @NotNull
     @Pattern(regexp = "[7|8][0-9]{10}")
     private String phoneNumber;
 

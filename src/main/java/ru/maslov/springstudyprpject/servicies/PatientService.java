@@ -48,12 +48,12 @@ public class PatientService {
 
     public Patient create(Patient patient) {
 
-        if (userService.findByLogin(patient.getLogin()).isPresent()) {
+        if (patientRepository.findByLogin(patient.getLogin()).isPresent()) {
             throw new PatientDataValidationException("patient with login "
                     + patient.getLogin() + " already exists");
         }
 
-        if (userService.findByPhoneNumber(patient.getPhoneNumber()).isPresent()) {
+        if (patientRepository.findByPhoneNumber(patient.getPhoneNumber()).isPresent()) {
             throw new PatientDataValidationException("patient with phone number "
                     + patient.getPhoneNumber() + " already exists");
         }
@@ -64,6 +64,41 @@ public class PatientService {
         }
 
         patient.setPassword(passwordEncoder.encode(patient.getPassword()));
+        return patientRepository.save(patient);
+    }
+
+    public Patient changePatientData(Patient updatedPatient) {
+        Patient patient
+                = patientRepository.findById(updatedPatient.getId()).orElseThrow(() -> {
+            throw new PatientNotFoundException("patient with id "
+                    + updatedPatient.getId() +
+                    " doesn't exist in base");
+        });
+
+        patient.setName(updatedPatient.getName());
+        patient.setPatronymic(updatedPatient.getPatronymic());
+        patient.setSurname(updatedPatient.getSurname());
+
+        if (patientRepository.findByLogin(updatedPatient.getLogin()).isPresent()) {
+            throw new PatientDataValidationException("patient with login "
+                    + patient.getLogin() + " already exists");
+        }
+        patient.setLogin(updatedPatient.getLogin());
+        patient.setPassword(updatedPatient.getPassword());
+
+        if (patientRepository.findByPhoneNumber(updatedPatient.getPhoneNumber()).isPresent()) {
+            throw new PatientDataValidationException("patient with phone number "
+                    + patient.getPhoneNumber() + " already exists");
+        }
+        patient.setPhoneNumber(updatedPatient.getPhoneNumber());
+
+        if (patientRepository.findByPolicyNumber(updatedPatient.getPolicyNumber()).isPresent()) {
+            throw new PatientDataValidationException("patient with policy number "
+                    + patient.getPolicyNumber() + " already exists");
+        }
+        patient.setPolicyNumber(updatedPatient.getPolicyNumber());
+
+
         return patientRepository.save(patient);
     }
 }

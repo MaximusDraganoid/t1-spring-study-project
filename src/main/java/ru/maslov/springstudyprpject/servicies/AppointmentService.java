@@ -100,7 +100,7 @@ public class AppointmentService {
                                 doctor,
                                 startWorkTime.atDate(date),
                                 typeOfAppointment,
-                                StatusOfAppointment.UNDER_CONSIDERATION,
+                                StatusOfAppointment.PLANNED,
                                 "base_description");
                         resultAppointments.add(appointment);
                     }

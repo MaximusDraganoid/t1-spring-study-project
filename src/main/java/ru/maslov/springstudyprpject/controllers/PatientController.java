@@ -52,7 +52,7 @@ public class PatientController {
 
     @PutMapping
     public Patient changePatientData(@RequestBody Patient patient) {
-        return null;
+        return patientService.changePatientData(patient);
     }
 
     @PostMapping

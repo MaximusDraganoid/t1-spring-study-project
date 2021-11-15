@@ -8,6 +8,7 @@ import ru.maslov.springstudyprpject.entities.Patient;
 import java.util.Optional;
 
 public interface PatientRepository extends JpaRepository<Patient, Long> {
-    @Query("FROM Patient where policyNumber = :policyNumber")
-    Optional<Patient> findByPolicyNumber(@Param("policyNumber") String policyNumber);
+    Optional<Patient> findByPolicyNumber(String policyNumber);
+    Optional<Patient> findByPhoneNumber(String phoneNumber);
+    Optional<Patient> findByLogin(String login);
 }
