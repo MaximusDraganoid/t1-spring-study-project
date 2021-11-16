@@ -4,7 +4,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.maslov.springstudyprpject.dto.DoctorDTO;
-import ru.maslov.springstudyprpject.entities.Doctor;
 
 import java.time.DayOfWeek;
 import java.util.HashMap;
@@ -31,7 +30,7 @@ public class HospitalWorkStatistics {
     }
 
     /**
-     *  Рассчитывает нагрузку на каждого врача по количеству приемов (можно сделать за месяц)
+     * Рассчитывает нагрузку на каждого врача по количеству приемов (можно сделать за месяц)
      */
     @GetMapping(path = "/by_doctors") //_specialization
     public Map<DoctorDTO, Long> getStatisticsByDoctors() {
@@ -39,7 +38,7 @@ public class HospitalWorkStatistics {
     }
 
     /**
-     *  Рассчитывает нагрузку на каждого врача по количеству приемов (можно сделать за месяц)
+     * Рассчитывает нагрузку на каждого врача по количеству приемов (можно сделать за месяц)
      */
     @GetMapping(path = "/by_doctors_specialization")
     public Map<DoctorDTO, Long> getStatisticsByDoctorsSpecialization() {

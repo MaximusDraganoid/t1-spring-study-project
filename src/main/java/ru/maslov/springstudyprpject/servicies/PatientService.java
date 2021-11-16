@@ -5,6 +5,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.maslov.springstudyprpject.entities.Appointment;
+import ru.maslov.springstudyprpject.entities.Doctor;
 import ru.maslov.springstudyprpject.entities.Patient;
 import ru.maslov.springstudyprpject.exceptions.PatientDataValidationException;
 import ru.maslov.springstudyprpject.exceptions.PatientNotFoundException;
@@ -152,6 +153,10 @@ public class PatientService {
         }
 
         return patientRepository.save(patient);
+    }
+
+    public List<Patient> getPatientsByDoctor(Doctor doctor) {
+        return patientRepository.findPatientsByDoctor(doctor);
     }
 
 }
