@@ -7,6 +7,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -21,7 +22,7 @@ public class Doctor extends User {
 
     @OneToMany(mappedBy = "doctor")
     @JsonIgnore
-    private Set<Appointment> appointments;
+    private Set<Appointment> appointments = new HashSet<>();
 
     public Doctor() {}
 
