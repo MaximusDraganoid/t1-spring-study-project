@@ -23,6 +23,7 @@ public class AppointmentService {
     private final TypeOfAppointmentRepository typeOfAppointmentRepository;
 
     private final DoctorService doctorService;
+    
     private final PatientService patientService;
 
     public AppointmentService(AppointmentRepository appointmentRepository,
