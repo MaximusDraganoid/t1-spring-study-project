@@ -1,5 +1,7 @@
 package ru.maslov.springstudyprpject.servicies;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,16 +24,19 @@ import java.util.Set;
 public class DoctorService {
 
     private final DoctorRepository doctorRepository;
-    private final AppointmentService appointmentService;
+
+    @Lazy
+    @Autowired
+    private AppointmentService appointmentService;
+
     private final PasswordEncoder passwordEncoder;
+
     private final PatientService patientService;
 
     public DoctorService(DoctorRepository doctorRepository,
-                         AppointmentService appointmentService,
                          PasswordEncoder passwordEncoder,
                          PatientService patientService) {
         this.doctorRepository = doctorRepository;
-        this.appointmentService = appointmentService;
         this.passwordEncoder = passwordEncoder;
         this.patientService = patientService;
     }

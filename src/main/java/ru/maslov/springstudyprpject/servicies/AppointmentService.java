@@ -1,5 +1,6 @@
 package ru.maslov.springstudyprpject.servicies;
 
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import ru.maslov.springstudyprpject.entities.*;
 import ru.maslov.springstudyprpject.exceptions.AppointmentDateFormatException;
@@ -22,7 +23,7 @@ public class AppointmentService {
 
     private final TypeOfAppointmentRepository typeOfAppointmentRepository;
 
-    private final DoctorService doctorService;
+    private DoctorService doctorService;
     
     private final PatientService patientService;
 
