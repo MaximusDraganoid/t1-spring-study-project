@@ -6,6 +6,7 @@ import ru.maslov.springstudyprpject.dto.DoctorDTO;
 import ru.maslov.springstudyprpject.dto.PatientDTO;
 import ru.maslov.springstudyprpject.dto.mappers.AppointmentMapper;
 import ru.maslov.springstudyprpject.dto.mappers.DoctorMapper;
+import ru.maslov.springstudyprpject.dto.mappers.PatientMapper;
 import ru.maslov.springstudyprpject.entities.Doctor;
 import ru.maslov.springstudyprpject.entities.DoctorsSchedule;
 import ru.maslov.springstudyprpject.servicies.DoctorService;
@@ -22,11 +23,17 @@ public class DoctorUserController {
     private final DoctorService doctorService;
     private final AppointmentMapper appointmentMapper;
     private final DoctorMapper doctorMapper;
+    private final PatientMapper patientMapper;
 
-    public DoctorUserController(DoctorService doctorService, AppointmentMapper appointmentMapper, DoctorMapper doctorMapper) {
+
+    public DoctorUserController(DoctorService doctorService,
+                                AppointmentMapper appointmentMapper,
+                                DoctorMapper doctorMapper,
+                                PatientMapper patientMapper) {
         this.doctorService = doctorService;
         this.appointmentMapper = appointmentMapper;
         this.doctorMapper = doctorMapper;
+        this.patientMapper = patientMapper;
     }
 
     /**
@@ -105,7 +112,6 @@ public class DoctorUserController {
      */
     @PostMapping(path = "/appointments")
     public AppointmentDTO assignAppointmentForPatient (@RequestBody AppointmentDTO appointmentDTO) {
-        //todo:
         return appointmentMapper.toAppointmentDTO(doctorService.assignAppointmentForPatient(appointmentMapper.toAppointment(appointmentDTO)));
     }
 
@@ -114,17 +120,20 @@ public class DoctorUserController {
      */
     @GetMapping(path = "/patients")
     public List<PatientDTO> getPatientsOfDoctor() {
-        //todo:
-        doctorService.getDoctorsPatients();
-        return null;
+        return doctorService.getDoctorsPatients()
+                .stream()
+                .map(patientMapper::toPatientDTO)
+                .collect(Collectors.toList());
     }
 
     /**
      * Получение истории премов данного пациента
      */
     @GetMapping(path = "/patients/{id}")
-    public List<AppointmentDTO> getPatientsAppointmentsHistory(@PathVariable("id") Long id) {
-        //todo:
-        return null;
+    public Set<AppointmentDTO> getPatientsAppointmentsHistory(@PathVariable("id") Long id) {
+        return doctorService.getAppointmentOfPatients(id)
+                .stream()
+                .map(appointmentMapper::toAppointmentDTO)
+                .collect(Collectors.toSet());
     }
 }

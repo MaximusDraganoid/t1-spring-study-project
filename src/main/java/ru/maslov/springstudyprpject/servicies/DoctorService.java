@@ -24,13 +24,16 @@ public class DoctorService {
     private final DoctorRepository doctorRepository;
     private final AppointmentService appointmentService;
     private final PasswordEncoder passwordEncoder;
+    private final PatientService patientService;
 
     public DoctorService(DoctorRepository doctorRepository,
                          AppointmentService appointmentService,
-                         PasswordEncoder passwordEncoder) {
+                         PasswordEncoder passwordEncoder,
+                         PatientService patientService) {
         this.doctorRepository = doctorRepository;
         this.appointmentService = appointmentService;
         this.passwordEncoder = passwordEncoder;
+        this.patientService = patientService;
     }
 
     public Doctor getSelfInfo() {
@@ -151,8 +154,11 @@ public class DoctorService {
     }
 
     public List<Patient> getDoctorsPatients() {
-        //todo:
-        
-        return null;
+        Doctor currentDoctor = getSelfInfo();
+        return patientService.getPatientsByDoctor(currentDoctor);
+    }
+
+    public Set<Appointment> getAppointmentOfPatients(Long id) {
+        return appointmentService.findAppointmentByPatientId(id);
     }
 }
