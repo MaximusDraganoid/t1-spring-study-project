@@ -1,15 +1,21 @@
 package ru.maslov.springstudyprpject.repositories;
 
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import ru.maslov.springstudyprpject.entities.*;
+import ru.maslov.springstudyprpject.entities.Doctor;
+import ru.maslov.springstudyprpject.entities.DoctorsSchedule;
+import ru.maslov.springstudyprpject.entities.DoctorsSpecialization;
+import ru.maslov.springstudyprpject.entities.Role;
 
 import java.time.DayOfWeek;
-import java.time.Duration;
 import java.time.LocalTime;
-import java.util.*;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -24,25 +30,18 @@ class DoctorRepositoryTest {
     private DoctorScheduleRepository doctorScheduleRepository;
 
     @Autowired
-    private TypeOfAppointmentRepository typeOfAppointmentRepository;
-
-    @Autowired
     private DoctorSpecializationRepository doctorSpecializationRepository;
 
     @AfterEach
     void tearDown() {
+        doctorScheduleRepository.deleteAll();
+        doctorSpecializationRepository.deleteAll();
         doctorRepositoryTest.deleteAll();
     }
 
-    @Test
-    void canFindDoctorForAppointmentsRecordByDate() {
-        //given
-        TypeOfAppointment examination = new TypeOfAppointment("Осмотр", Duration.ofMinutes(30));
-        typeOfAppointmentRepository.saveAll(List.of(examination));
-
+    @BeforeEach
+    void setUp() {
         DoctorsSpecialization surgeon = new DoctorsSpecialization("Хирург", new HashSet<>());
-        Set<TypeOfAppointment> surgeonTypeOfAppointment = surgeon.getTypeOfAppointmentSet();
-        surgeonTypeOfAppointment.addAll(List.of(examination));
         doctorSpecializationRepository.saveAll(List.of(surgeon));
 
         Doctor firstDoctor = new Doctor("Иван",
@@ -56,131 +55,73 @@ class DoctorRepositoryTest {
                 new LinkedList<>(),
                 new HashSet<>());
 
-        Doctor secondDoctor = new Doctor("Иван",
-                "Иванович",
-                "Иванов",
-                "ivanovii",
-                "ai_is_coming",
-                "79106272033",
-                List.of(Role.DOCTOR),
-                surgeon,
-                new LinkedList<>(),
-                new HashSet<>());
-
-        doctorRepositoryTest.saveAll(List.of(firstDoctor, secondDoctor));
+        doctorRepositoryTest.saveAll(List.of(firstDoctor));
 
         DoctorsSchedule firstDoctorScheduleDay = new DoctorsSchedule(firstDoctor,
                 DayOfWeek.MONDAY,
                 LocalTime.of(8, 0, 0),
                 LocalTime.of(18, 0, 0));
 
-        DoctorsSchedule secondDoctorScheduleDay = new DoctorsSchedule(firstDoctor,
-                DayOfWeek.WEDNESDAY,
-                LocalTime.of(8, 0, 0),
-                LocalTime.of(18, 0, 0));
-        doctorScheduleRepository.saveAll(List.of(firstDoctorScheduleDay, secondDoctorScheduleDay));
-        //when
-        List<Doctor> foundDoctors = doctorRepositoryTest.getDoctorForAppointmentsRecordByDate(DayOfWeek.MONDAY, surgeon);
-        //then
+        doctorScheduleRepository.saveAll(List.of(firstDoctorScheduleDay));
+    }
+
+    @Test
+    void canFindDoctorForAppointmentsRecordByDate() {
+        //given
         int expectedValue = 1;
+        DayOfWeek monday = DayOfWeek.MONDAY;
+        DoctorsSpecialization surgeon = doctorSpecializationRepository.findAll().get(0);
+        String expectedLogin = "ivanovii";
+        //when
+        List<Doctor> foundDoctors = doctorRepositoryTest.getDoctorForAppointmentsRecordByDate(monday, surgeon);
+        //then
         assertThat(foundDoctors.size()).isEqualTo(expectedValue);
-        assertThat(foundDoctors.get(0).getLogin().equals(firstDoctor.getLogin()));
+        assertThat(foundDoctors.get(0).getLogin().equals(expectedLogin));
     }
 
     @Test
     void canNotFindDoctorForAppointmentsRecordByDate() {
         //given
-        TypeOfAppointment examination = new TypeOfAppointment("Осмотр", Duration.ofMinutes(30));
-        typeOfAppointmentRepository.saveAll(List.of(examination));
-
-        DoctorsSpecialization surgeon = new DoctorsSpecialization("Хирург", new HashSet<>());
-        Set<TypeOfAppointment> surgeonTypeOfAppointment = surgeon.getTypeOfAppointmentSet();
-        surgeonTypeOfAppointment.addAll(List.of(examination));
-        doctorSpecializationRepository.saveAll(List.of(surgeon));
-
-        Doctor firstDoctor = new Doctor("Иван",
-                "Иванович",
-                "Иванов",
-                "ivanovii",
-                "ai_is_coming",
-                "79106272033",
-                List.of(Role.DOCTOR),
-                surgeon,
-                new LinkedList<>(),
-                new HashSet<>());
-
-        Doctor secondDoctor = new Doctor("Иван",
-                "Иванович",
-                "Иванов",
-                "ivanovii",
-                "ai_is_coming",
-                "79106272033",
-                List.of(Role.DOCTOR),
-                surgeon,
-                new LinkedList<>(),
-                new HashSet<>());
-
-        doctorRepositoryTest.saveAll(List.of(firstDoctor, secondDoctor));
-
-        DoctorsSchedule firstDoctorScheduleDay = new DoctorsSchedule(firstDoctor,
-                DayOfWeek.TUESDAY,
-                LocalTime.of(8, 0, 0),
-                LocalTime.of(18, 0, 0));
-
-        DoctorsSchedule secondDoctorScheduleDay = new DoctorsSchedule(firstDoctor,
-                DayOfWeek.WEDNESDAY,
-                LocalTime.of(8, 0, 0),
-                LocalTime.of(18, 0, 0));
-        doctorScheduleRepository.saveAll(List.of(firstDoctorScheduleDay, secondDoctorScheduleDay));
-        //when
-        List<Doctor> foundDoctors = doctorRepositoryTest.getDoctorForAppointmentsRecordByDate(DayOfWeek.MONDAY, surgeon);
-        //then
         int expectedValue = 0;
+        DayOfWeek wednesday = DayOfWeek.WEDNESDAY;
+        DoctorsSpecialization surgeon = doctorSpecializationRepository.findAll().get(0);
+        //when
+        List<Doctor> foundDoctors = doctorRepositoryTest.getDoctorForAppointmentsRecordByDate(wednesday, surgeon);
+        //then
         assertThat(foundDoctors.size()).isEqualTo(expectedValue);
     }
 
     @Test
+    void canNotFindDoctorForAppointmentsRecordByDoctorsSpecialization() {
+        //given
+        int expectedValue = 0;
+        DayOfWeek monday = DayOfWeek.MONDAY;
+        DoctorsSpecialization testSpec = new DoctorsSpecialization("test_spec", new HashSet<>());
+        testSpec = doctorSpecializationRepository.save(testSpec);
+        //when
+        List<Doctor> foundDoctors = doctorRepositoryTest.getDoctorForAppointmentsRecordByDate(monday, testSpec);
+        //then
+        assertThat(foundDoctors.size()).isEqualTo(expectedValue);
+    }
+
+
+    @Test
     public void canFindDoctorByLogin() {
         //given
-        DoctorsSpecialization surgeon = new DoctorsSpecialization("Хирург", new HashSet<>());
-        doctorSpecializationRepository.saveAll(List.of(surgeon));
-
-        Doctor firstDoctor = new Doctor("Иван",
-                "Иванович",
-                "Иванов",
-                "ivanovii",
-                "ai_is_coming",
-                "79106272033",
-                List.of(Role.DOCTOR),
-                surgeon,
-                new LinkedList<>(),
-                new HashSet<>());
-        doctorRepositoryTest.save(firstDoctor);
+        String searchedLogin = "ivanovii";
         //when
-        Optional<Doctor> foundDoctor = doctorRepositoryTest.findByLogin("ivanovii");
+        Optional<Doctor> foundDoctor = doctorRepositoryTest.findByLogin(searchedLogin);
         //then
         assertThat(foundDoctor.isPresent()).isTrue();
+        assertThat(foundDoctor.get().getLogin()).isEqualTo(searchedLogin);
     }
 
     @Test
     public void canNotFindDoctorByLogin() {
         //given
-        DoctorsSpecialization surgeon = new DoctorsSpecialization("Хирург", new HashSet<>());
-        doctorSpecializationRepository.saveAll(List.of(surgeon));
-
-        Doctor firstDoctor = new Doctor("Иван",
-                "Иванович",
-                "Иванов",
-                "ivanovii",
-                "ai_is_coming",
-                "79106272033",
-                List.of(Role.DOCTOR),
-                surgeon,
-                new LinkedList<>(),
-                new HashSet<>());
-        doctorRepositoryTest.save(firstDoctor);
+        String searchedLogin = "ivanov1ii";
         //when
-        Optional<Doctor> foundDoctor = doctorRepositoryTest.findByLogin("ivanov1ii");
+        Optional<Doctor> foundDoctor = doctorRepositoryTest.findByLogin(searchedLogin);
         //then
         assertThat(foundDoctor.isPresent()).isFalse();
     }
@@ -188,22 +129,9 @@ class DoctorRepositoryTest {
     @Test
     public void canFindDoctorByPhoneNumer() {
         //given
-        DoctorsSpecialization surgeon = new DoctorsSpecialization("Хирург", new HashSet<>());
-        doctorSpecializationRepository.saveAll(List.of(surgeon));
-
-        Doctor firstDoctor = new Doctor("Иван",
-                "Иванович",
-                "Иванов",
-                "ivanovii",
-                "ai_is_coming",
-                "79106272033",
-                List.of(Role.DOCTOR),
-                surgeon,
-                new LinkedList<>(),
-                new HashSet<>());
-        doctorRepositoryTest.save(firstDoctor);
+        String searchedPhoneNumber = "79106272033";
         //when
-        Optional<Doctor> foundDoctor = doctorRepositoryTest.findByPhoneNumber("79106272033");
+        Optional<Doctor> foundDoctor = doctorRepositoryTest.findByPhoneNumber(searchedPhoneNumber);
         //then
         assertThat(foundDoctor.isPresent()).isTrue();
     }
@@ -211,22 +139,9 @@ class DoctorRepositoryTest {
     @Test
     public void canNotFindDoctorByPhoneNumber() {
         //given
-        DoctorsSpecialization surgeon = new DoctorsSpecialization("Хирург", new HashSet<>());
-        doctorSpecializationRepository.saveAll(List.of(surgeon));
-
-        Doctor firstDoctor = new Doctor("Иван",
-                "Иванович",
-                "Иванов",
-                "ivanovii",
-                "ai_is_coming",
-                "79106272033",
-                List.of(Role.DOCTOR),
-                surgeon,
-                new LinkedList<>(),
-                new HashSet<>());
-        doctorRepositoryTest.save(firstDoctor);
+        String searchedPhoneNumber = "79106272032";
         //when
-        Optional<Doctor> foundDoctor = doctorRepositoryTest.findByLogin("79106272032");
+        Optional<Doctor> foundDoctor = doctorRepositoryTest.findByLogin(searchedPhoneNumber);
         //then
         assertThat(foundDoctor.isPresent()).isFalse();
     }
