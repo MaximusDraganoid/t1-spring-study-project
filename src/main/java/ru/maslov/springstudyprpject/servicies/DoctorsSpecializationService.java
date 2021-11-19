@@ -20,11 +20,4 @@ public class DoctorsSpecializationService {
     public List<DoctorsSpecialization> getAllSpecializations() {
         return doctorSpecializationRepository.findAll();
     }
-
-    public DoctorsSpecialization findById(Long id) {
-        return doctorSpecializationRepository.findById(id).orElseThrow(() -> {
-            throw new DoctorSpecializationNotFoundException("specialization with id " + id + " not found in db.");
-        });
-
-    }
 }
