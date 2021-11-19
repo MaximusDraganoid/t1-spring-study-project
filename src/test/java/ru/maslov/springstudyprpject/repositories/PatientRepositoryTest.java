@@ -5,21 +5,35 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import ru.maslov.springstudyprpject.entities.Patient;
-import ru.maslov.springstudyprpject.entities.Role;
+import ru.maslov.springstudyprpject.entities.*;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 class PatientRepositoryTest {
 
     @Autowired
     private PatientRepository patientRepositoryTest;
+
+    @Autowired
+    private AppointmentRepository appointmentRepository;
+
+    @Autowired
+    private DoctorRepository doctorRepository;
+
+    @Autowired
+    private TypeOfAppointmentRepository typeOfAppointmentRepository;
+
+    @Autowired
+    private DoctorSpecializationRepository doctorSpecializationRepository;
+
 
     @BeforeEach
     void setUp() {
@@ -39,6 +53,56 @@ class PatientRepositoryTest {
     @AfterEach
     void tearDown() {
         patientRepositoryTest.deleteAll();
+    }
+
+    @Test
+    void canFindPatientsByDoctor() {
+        //given
+        TypeOfAppointment examination = new TypeOfAppointment("Осмотр", Duration.ofMinutes(30));
+        typeOfAppointmentRepository.save(examination);
+        DoctorsSpecialization surgeon = new DoctorsSpecialization("Хирург", new HashSet<>());
+        doctorSpecializationRepository.save(surgeon);
+        Patient patient = new Patient("Иван",
+                "Сергеевич",
+                "Тюрин",
+                "tuirnis",
+                "1vaN",
+                "79106272030",
+                List.of(Role.PATIENT),
+                "1234567890123456",
+                new HashSet<>());
+        patient = patientRepositoryTest.save(patient);
+
+        Doctor doctor = new Doctor("Иван",
+                "Иванович",
+                "Иванов",
+                "ivanovii",
+                "ai_is_coming",
+                "79106272033",
+                List.of(Role.DOCTOR),
+                surgeon,
+                new LinkedList<>(),
+                new HashSet<>());
+        doctor = doctorRepository.save(doctor);
+
+        Appointment appointment = new Appointment(patient,
+                doctor,
+                LocalDateTime.now(),
+                examination,
+                StatusOfAppointment.PLANNED,
+                "test_description");
+        appointmentRepository.saveAll(List.of(appointment, appointment, appointment));
+        int expectedSizeOfList = 1;
+        //when
+        List<Patient> patientsByDoctor = patientRepositoryTest.findDistinctPatientsByDoctor(doctor);
+        //then
+        assertThat(patientsByDoctor.size()).isEqualTo(expectedSizeOfList);
+        assertThat(patientsByDoctor.get(0).getId()).isEqualTo(patient.getId());
+    }
+
+    @Test
+    void canNotFindPatientsByDoctor() {
+
     }
 
     @Test

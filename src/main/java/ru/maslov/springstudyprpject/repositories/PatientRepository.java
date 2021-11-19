@@ -14,6 +14,6 @@ public interface PatientRepository extends JpaRepository<Patient, Long> {
     Optional<Patient> findByPhoneNumber(String phoneNumber);
     Optional<Patient> findByLogin(String login);
 
-    @Query("SELECT DISTINCT(patient) FROM Appointment WHERE doctor = :doctor")
-    List<Patient> findPatientsByDoctor(@Param("doctor") Doctor doctor);
+    @Query("SELECT DISTINCT a.patient FROM Appointment a WHERE a.doctor = :doctor")
+    List<Patient> findDistinctPatientsByDoctor(@Param("doctor") Doctor doctor);
 }

@@ -21,8 +21,6 @@ public class PatientService {
     private final PatientRepository patientRepository;
     private final PasswordEncoder passwordEncoder;
 
-    @Lazy
-    @Autowired
     private AppointmentService appointmentService;
 
     public PatientService(PatientRepository patientRepository,
@@ -32,7 +30,7 @@ public class PatientService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public Set<Appointment> getSelfAppointments (Boolean withHistoryOfAppointments) {
+    public Set<Appointment> getSelfAppointments(Boolean withHistoryOfAppointments) {
         Patient currentPatient = getSelfInfo();
         Set<Appointment> resultAppointments;
         if (withHistoryOfAppointments) {
@@ -70,13 +68,13 @@ public class PatientService {
     }
 
     public Patient getById(Long id) {
-        return patientRepository.findById(id).orElseThrow(
-                () -> {
-                    throw new PatientNotFoundException("patient with id "
-                            + id +
-                            " doesn't exist in base");
-                }
-        );
+        return patientRepository.findById(id)
+                .orElseThrow(() -> {
+                            throw new PatientNotFoundException("patient with id "
+                                    + id +
+                                    " doesn't exist in base");
+                        }
+                );
     }
 
     public void deleteById(Long id) {
@@ -122,10 +120,6 @@ public class PatientService {
         return changePatientData(patient, updatedPatient);
     }
 
-    public Appointment createAppointmentForPatient(Appointment appointment) {
-        return appointmentService.saveAppointment(appointment);
-    }
-
     private Patient changePatientData(Patient patient, Patient updatedPatient) {
 
         patient.setName(updatedPatient.getName());
@@ -135,7 +129,7 @@ public class PatientService {
         if (!patient.getLogin().equals(updatedPatient.getLogin())) {
             if (patientRepository.findByLogin(updatedPatient.getLogin()).isPresent()) {
                 throw new PatientDataValidationException("patient with login "
-                        + patient.getLogin() + " already exists");
+                        + updatedPatient.getLogin() + " already exists");
             }
 
             patient.setLogin(updatedPatient.getLogin());
@@ -144,7 +138,7 @@ public class PatientService {
         if (!patient.getPhoneNumber().equals(updatedPatient.getPhoneNumber())) {
             if (patientRepository.findByPhoneNumber(updatedPatient.getPhoneNumber()).isPresent()) {
                 throw new PatientDataValidationException("patient with phone number "
-                        + patient.getPhoneNumber() + " already exists");
+                        + updatedPatient.getPhoneNumber() + " already exists");
             }
             patient.setPhoneNumber(updatedPatient.getPhoneNumber());
         }
@@ -153,7 +147,7 @@ public class PatientService {
         if (!patient.getPolicyNumber().equals(updatedPatient.getPolicyNumber())) {
             if (patientRepository.findByPolicyNumber(updatedPatient.getPolicyNumber()).isPresent()) {
                 throw new PatientDataValidationException("patient with policy number "
-                        + patient.getPolicyNumber() + " already exists");
+                        + updatedPatient.getPolicyNumber() + " already exists");
             }
             patient.setPolicyNumber(updatedPatient.getPolicyNumber());
         }
@@ -162,7 +156,16 @@ public class PatientService {
     }
 
     public List<Patient> getPatientsByDoctor(Doctor doctor) {
-        return patientRepository.findPatientsByDoctor(doctor);
+        return patientRepository.findDistinctPatientsByDoctor(doctor);
     }
 
+    public Appointment createAppointmentForPatient(Appointment appointment) {
+        return appointmentService.saveAppointment(appointment);
+    }
+
+    @Lazy
+    @Autowired
+    public void setAppointmentService(AppointmentService appointmentService) {
+        this.appointmentService = appointmentService;
+    }
 }
