@@ -57,6 +57,6 @@ public class PatientController {
 
     @PostMapping
     public Patient create(@RequestBody @Valid Patient patient) {
-        return patientService.create(patient);
+        return patientService.save(patient);
     }
 }

@@ -118,7 +118,7 @@ class PatientServiceTest {
                 new HashSet<>());
         ArgumentCaptor<Patient> patientArgumentCaptor = ArgumentCaptor.forClass(Patient.class);
         //when
-        patientService.create(patient);
+        patientService.save(patient);
         //then
         verify(patientRepository).findByLogin(patient.getLogin());
         verify(patientRepository).findByPhoneNumber(patient.getPhoneNumber());
@@ -145,7 +145,7 @@ class PatientServiceTest {
                 .willReturn(Optional.of(patient));
         //when
         //then
-        assertThatThrownBy(() -> patientService.create(patient))
+        assertThatThrownBy(() -> patientService.save(patient))
                 .isInstanceOf(PatientDataValidationException.class)
                 .hasMessage("patient with login "
                                 + patient.getLogin() + " already exists");
@@ -171,7 +171,7 @@ class PatientServiceTest {
                 .willReturn(Optional.of(patient));
         //when
         //then
-        assertThatThrownBy(() -> patientService.create(patient))
+        assertThatThrownBy(() -> patientService.save(patient))
                 .isInstanceOf(PatientDataValidationException.class)
                 .hasMessage("patient with phone number "
                         + patient.getPhoneNumber() + " already exists");
@@ -197,7 +197,7 @@ class PatientServiceTest {
                 .willReturn(Optional.of(patient));
         //when
         //then
-        assertThatThrownBy(() -> patientService.create(patient))
+        assertThatThrownBy(() -> patientService.save(patient))
                 .isInstanceOf(PatientDataValidationException.class)
                 .hasMessage("patient with policy number "
                         + patient.getPolicyNumber() + " already exists");
@@ -418,5 +418,50 @@ class PatientServiceTest {
         //then
         verify(appointmentService).saveAppointment(appointment);
 
+    }
+
+    @Test
+    void canAddAppointmentToPatient() {
+        //given
+        Long patientId = 0L;
+        Patient patient = new Patient();
+        patient.setId(patientId);
+
+        Long appointmentId = 1L;
+        Appointment appointment = new Appointment();
+        appointment.setId(appointmentId);
+
+        given(patientRepository.findById(patientId))
+                .willReturn(Optional.of(patient));
+        ArgumentCaptor<Patient> patientCaptor = ArgumentCaptor.forClass(Patient.class);
+        //when
+        patientService.addAppointmentToPatient(patient, appointment);
+        //then
+        verify(patientRepository).save(patientCaptor.capture());
+        assertThat(patient.getId()).isEqualTo(patientCaptor.getValue().getId());
+        assertThat(patient.getAppointmentSet()).isEqualTo(patientCaptor.getValue().getAppointmentSet());
+    }
+
+    @Test
+    void canNotAddAppointmentToPatient() {
+        //given
+        Long patientId = 0L;
+        Patient patient = new Patient();
+        patient.setId(patientId);
+
+        Long appointmentId = 1L;
+        Appointment appointment = new Appointment();
+        appointment.setId(appointmentId);
+
+        given(patientRepository.findById(patientId))
+                .willReturn(Optional.empty());
+        //when
+        //then
+        assertThatThrownBy(() -> patientService.addAppointmentToPatient(patient, appointment))
+                .isInstanceOf(PatientNotFoundException.class)
+                .hasMessage("patient with id "
+                        + patientId +
+                        " doesn't exist in base");
+        verify(patientRepository, never()).save(any());
     }
 }

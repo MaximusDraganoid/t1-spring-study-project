@@ -92,7 +92,7 @@ public class DoctorService {
         doctorRepository.delete(doctor);
     }
 
-    public Doctor create(Doctor doctor) {
+    public Doctor save(Doctor doctor) {
         if (doctorRepository.findByLogin(doctor.getLogin()).isPresent()) {
             throw new DoctorDataValidationException("login " + doctor.getLogin() + " exist in base");
         }
@@ -165,5 +165,11 @@ public class DoctorService {
 
     public Set<Appointment> getAppointmentOfPatients(Long id) {
         return appointmentService.findAppointmentByPatientId(id);
+    }
+
+    public void addAppointmentToDoctor(Doctor doctor, Appointment appointment) {
+        doctor = getById(doctor.getId());
+        doctor.getAppointments().add(appointment);
+        doctorRepository.save(doctor);
     }
 }

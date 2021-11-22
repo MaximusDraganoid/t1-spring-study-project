@@ -59,7 +59,14 @@ public class AppointmentService {
 
     public Appointment saveAppointment(Appointment appointment) {
 
-        return appointmentRepository.save(appointment);
+        appointment = appointmentRepository.save(appointment);
+
+        Doctor currentDoctor = doctorService.getById(appointment.getDoctor().getId());
+        currentDoctor.getAppointments().add(appointment);
+
+        patientService.addAppointmentToPatient(appointment.getPatient(), appointment);
+        doctorService.addAppointmentToDoctor(appointment.getDoctor(), appointment);
+        return appointment;
     }
 
 

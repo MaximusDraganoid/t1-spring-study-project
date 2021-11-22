@@ -50,7 +50,7 @@ public class DoctorController {
 
     @PostMapping
     public Doctor createDoctor(@RequestBody @Valid Doctor doctor) {
-        return doctorService.create(doctor);
+        return doctorService.save(doctor);
     }
 
     @ExceptionHandler({MethodArgumentNotValidException.class})

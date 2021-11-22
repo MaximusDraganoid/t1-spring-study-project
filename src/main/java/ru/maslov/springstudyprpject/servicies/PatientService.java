@@ -88,7 +88,7 @@ public class PatientService {
         patientRepository.delete(patient);
     }
 
-    public Patient create(Patient patient) {
+    public Patient save(Patient patient) {
 
         if (patientRepository.findByLogin(patient.getLogin()).isPresent()) {
             throw new PatientDataValidationException("patient with login "
@@ -159,8 +159,15 @@ public class PatientService {
         return patientRepository.findDistinctPatientsByDoctor(doctor);
     }
 
+    //todo: рефакторить - следующие 2 метода похожи.
     public Appointment createAppointmentForPatient(Appointment appointment) {
         return appointmentService.saveAppointment(appointment);
+    }
+
+    public void addAppointmentToPatient(Patient patient, Appointment appointment) {
+        patient = getById(patient.getId());
+        patient.getAppointmentSet().add(appointment);
+        patientRepository.save(patient);
     }
 
     @Lazy
