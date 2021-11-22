@@ -102,7 +102,59 @@ class PatientRepositoryTest {
 
     @Test
     void canNotFindPatientsByDoctor() {
+        //todo:
+        //given
+        TypeOfAppointment examination = new TypeOfAppointment("Осмотр", Duration.ofMinutes(30));
+        typeOfAppointmentRepository.save(examination);
+        DoctorsSpecialization surgeon = new DoctorsSpecialization("Хирург", new HashSet<>());
+        doctorSpecializationRepository.save(surgeon);
+        Patient patient = new Patient("Иван",
+                "Сергеевич",
+                "Тюрин",
+                "tuirnis",
+                "1vaN",
+                "79106272030",
+                List.of(Role.PATIENT),
+                "1234567890123456",
+                new HashSet<>());
+        patient = patientRepositoryTest.save(patient);
 
+        Doctor doctor = new Doctor("Иван",
+                "Иванович",
+                "Иванов",
+                "ivanovii",
+                "ai_is_coming",
+                "79106272033",
+                List.of(Role.DOCTOR),
+                surgeon,
+                new LinkedList<>(),
+                new HashSet<>());
+        doctor = doctorRepository.save(doctor);
+
+        Doctor newDoctor = new Doctor("Семен",
+                "Семенович",
+                "Семенв",
+                "semenovss",
+                "semen",
+                "79106272044",
+                List.of(Role.DOCTOR),
+                surgeon,
+                new LinkedList<>(),
+                new HashSet<>());
+        newDoctor = doctorRepository.save(newDoctor);
+
+        Appointment appointment = new Appointment(patient,
+                doctor,
+                LocalDateTime.now(),
+                examination,
+                StatusOfAppointment.PLANNED,
+                "test_description");
+        appointmentRepository.saveAll(List.of(appointment, appointment, appointment));
+        int expectedSizeOfList = 0;
+        //when
+        List<Patient> patientsByDoctor = patientRepositoryTest.findDistinctPatientsByDoctor(newDoctor);
+        //then
+        assertThat(patientsByDoctor.size()).isEqualTo(expectedSizeOfList);
     }
 
     @Test
