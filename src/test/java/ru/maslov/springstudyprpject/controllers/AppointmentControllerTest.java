@@ -120,4 +120,6 @@ class AppointmentControllerTest {
         //then
         assertThat(appointmentDTOResponseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
+
+    // TODO: 22.11.2021 добавить тестирование второго метода 
 }
