@@ -14,6 +14,15 @@ public class TypeOfAppointmentService {
         this.typeOfAppointmentRepository = typeOfAppointmentRepository;
     }
 
+    public TypeOfAppointment getTypeById(Long id) {
+        //todo: сделать тест и отделный тип исключения
+        return typeOfAppointmentRepository.findById(id).orElseThrow(() -> {
+            throw new RuntimeException("No such type of appointment with id "
+                    + id
+                    + " in db");
+        });
+    }
+
     public Set<TypeOfAppointment> getTypesBySpecializationId(Long id) {
         return typeOfAppointmentRepository.findTypeOfAppointmentBySpecializationId(id);
     }

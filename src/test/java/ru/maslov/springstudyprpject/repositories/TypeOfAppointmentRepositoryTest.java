@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.TestPropertySource;
 import ru.maslov.springstudyprpject.entities.DoctorsSpecialization;
 import ru.maslov.springstudyprpject.entities.TypeOfAppointment;
 
@@ -16,6 +17,7 @@ import java.util.Set;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @DataJpaTest
+@TestPropertySource("classpath:unit-test-application.properties")
 class TypeOfAppointmentRepositoryTest {
 
     @Autowired

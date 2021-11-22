@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.TestPropertySource;
 import ru.maslov.springstudyprpject.entities.Doctor;
 import ru.maslov.springstudyprpject.entities.DoctorsSchedule;
 import ru.maslov.springstudyprpject.entities.DoctorsSpecialization;
@@ -21,6 +22,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @DataJpaTest //конфигурация, которая автоматически настраивает репоситории для тестирования (сканит энтити, настривает репозитории и доступ к in-memory db).
         //application context при этом загружается не полностью, а только необходимые детали
+@TestPropertySource("classpath:unit-test-application.properties")
 class DoctorRepositoryTest {
 
     @Autowired

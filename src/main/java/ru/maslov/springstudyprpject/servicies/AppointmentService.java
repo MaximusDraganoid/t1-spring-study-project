@@ -1,6 +1,5 @@
 package ru.maslov.springstudyprpject.servicies;
 
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import ru.maslov.springstudyprpject.entities.*;
 import ru.maslov.springstudyprpject.exceptions.AppointmentDateFormatException;
@@ -60,9 +59,6 @@ public class AppointmentService {
     public Appointment saveAppointment(Appointment appointment) {
 
         appointment = appointmentRepository.save(appointment);
-
-        Doctor currentDoctor = doctorService.getById(appointment.getDoctor().getId());
-        currentDoctor.getAppointments().add(appointment);
 
         patientService.addAppointmentToPatient(appointment.getPatient(), appointment);
         doctorService.addAppointmentToDoctor(appointment.getDoctor(), appointment);
