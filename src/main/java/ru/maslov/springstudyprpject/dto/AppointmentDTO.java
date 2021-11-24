@@ -3,16 +3,47 @@ package ru.maslov.springstudyprpject.dto;
 import ru.maslov.springstudyprpject.entities.StatusOfAppointment;
 import ru.maslov.springstudyprpject.entities.TypeOfAppointment;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 public class AppointmentDTO {
+
     private Long id;
+
+    @NotNull
     private DoctorDTO doctor;
+
+    @NotNull
     private PatientDTO patient;
+
+    @NotNull
     private LocalDateTime startAppointmentDateTime;
+
+    @NotNull
     private TypeOfAppointment typeOfAppointment;
-    private StatusOfAppointment status;
+
+    @NotNull
+    private StatusOfAppointment statusOfAppointment;
+
     private String description;
+
+    public AppointmentDTO() {}
+
+    public AppointmentDTO(Long id,
+                          @NotNull DoctorDTO doctor,
+                          @NotNull PatientDTO patient,
+                          @NotNull LocalDateTime startAppointmentDateTime,
+                          @NotNull TypeOfAppointment typeOfAppointment,
+                          @NotNull StatusOfAppointment statusOfAppointment,
+                          String description) {
+        this.id = id;
+        this.doctor = doctor;
+        this.patient = patient;
+        this.startAppointmentDateTime = startAppointmentDateTime;
+        this.typeOfAppointment = typeOfAppointment;
+        this.statusOfAppointment = statusOfAppointment;
+        this.description = description;
+    }
 
     public Long getId() {
         return id;
@@ -55,11 +86,11 @@ public class AppointmentDTO {
     }
 
     public StatusOfAppointment getStatus() {
-        return status;
+        return statusOfAppointment;
     }
 
     public void setStatus(StatusOfAppointment status) {
-        this.status = status;
+        this.statusOfAppointment = status;
     }
 
     public String getDescription() {

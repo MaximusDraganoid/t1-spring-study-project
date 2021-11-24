@@ -7,6 +7,7 @@ import ru.maslov.springstudyprpject.dto.mappers.AppointmentMapper;
 import ru.maslov.springstudyprpject.entities.Appointment;
 import ru.maslov.springstudyprpject.servicies.AppointmentService;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Set;
@@ -42,7 +43,7 @@ public class AppointmentController {
     }
 
     @PostMapping
-    public AppointmentDTO createAppointment(@RequestBody AppointmentDTO appointmentDTO) {
+    public AppointmentDTO createAppointment(@RequestBody @Valid @NotNull AppointmentDTO appointmentDTO) {
         Appointment appointment = appointmentService.saveAppointment(mapper.toAppointment(appointmentDTO));
         return mapper.toAppointmentDTO(appointment);
     }

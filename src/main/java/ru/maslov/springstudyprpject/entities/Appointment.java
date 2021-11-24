@@ -23,7 +23,7 @@ public class Appointment {
     private TypeOfAppointment typeOfAppointment;
 
     @Enumerated(EnumType.STRING)
-    private StatusOfAppointment status;
+    private StatusOfAppointment statusOfAppointment;
 
     private String description;
 
@@ -39,7 +39,7 @@ public class Appointment {
         this.doctor = doctor;
         this.dataTimeOfAppointment = dataTimeOfAppointment;
         this.typeOfAppointment = typeOfAppointment;
-        this.status = status;
+        this.statusOfAppointment = status;
         this.description = description;
     }
 
@@ -84,11 +84,11 @@ public class Appointment {
     }
 
     public StatusOfAppointment getStatus() {
-        return status;
+        return statusOfAppointment;
     }
 
     public void setStatus(StatusOfAppointment status) {
-        this.status = status;
+        this.statusOfAppointment = status;
     }
 
     public String getDescription() {
@@ -112,7 +112,7 @@ public class Appointment {
             return false;
         if (!Objects.equals(typeOfAppointment, that.typeOfAppointment))
             return false;
-        if (status != that.status) return false;
+        if (statusOfAppointment != that.statusOfAppointment) return false;
         return Objects.equals(description, that.description);
     }
 
@@ -122,7 +122,7 @@ public class Appointment {
         result = 31 * result + (doctor != null ? doctor.hashCode() : 0);
         result = 31 * result + (dataTimeOfAppointment != null ? dataTimeOfAppointment.hashCode() : 0);
         result = 31 * result + (typeOfAppointment != null ? typeOfAppointment.hashCode() : 0);
-        result = 31 * result + (status != null ? status.hashCode() : 0);
+        result = 31 * result + (statusOfAppointment != null ? statusOfAppointment.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
         return result;
     }

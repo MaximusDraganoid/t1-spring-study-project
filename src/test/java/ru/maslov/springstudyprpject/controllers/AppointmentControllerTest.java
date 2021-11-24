@@ -116,9 +116,66 @@ class AppointmentControllerTest {
                 StatusOfAppointment.PLANNED,
                 "Описание приема");
         //when
-        ResponseEntity<AppointmentDTO> appointmentDTOResponseEntity = restTemplate.postForEntity(LOCAL_HOST + port + BASE_PATH, appointmentMapper.toAppointmentDTO(testAppointment), AppointmentDTO.class);
+        ResponseEntity<AppointmentDTO> appointmentDTOResponseEntity =
+                restTemplate.postForEntity(LOCAL_HOST + port + BASE_PATH,
+                        appointmentMapper.toAppointmentDTO(testAppointment),
+                        AppointmentDTO.class);
         //then
         assertThat(appointmentDTOResponseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    void canNotCreateAppointmentBecauseBodyHasNullField() {
+        ///given
+        Long patientId = 8L;
+        Patient patient = patientService.getById(patientId);
+
+        Long wrongDoctorId = 55L;
+        Long doctorId = 11L;
+        Doctor doctor = doctorService.getById(doctorId);
+        doctor.setId(wrongDoctorId);
+
+        Long typeOfAppointmentId = 1L;
+        TypeOfAppointment typeOfAppointment = typeOfAppointmentService.getTypeById(typeOfAppointmentId);
+
+        Appointment testAppointment = new Appointment(null,
+                doctor,
+                LocalDateTime.now(),
+                typeOfAppointment,
+                StatusOfAppointment.PLANNED,
+                "Описание приема");
+        //when
+        ResponseEntity<AppointmentDTO> appointmentDTOResponseEntity =
+                restTemplate.postForEntity(LOCAL_HOST + port + BASE_PATH,
+                        appointmentMapper.toAppointmentDTO(testAppointment),
+                        AppointmentDTO.class);
+        //then
+        assertThat(appointmentDTOResponseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(appointmentDTOResponseEntity.getBody().getStatus()).isEqualTo(StatusOfAppointment.ERROR);
+    }
+
+    @Test
+    void canNotCreateAppointmentBecauseBodyIsNull() {
+        ///given
+        Long patientId = 8L;
+        Patient patient = patientService.getById(patientId);
+
+        Long wrongDoctorId = 55L;
+        Long doctorId = 11L;
+        Doctor doctor = doctorService.getById(doctorId);
+        doctor.setId(wrongDoctorId);
+
+        Long typeOfAppointmentId = 1L;
+        TypeOfAppointment typeOfAppointment = typeOfAppointmentService.getTypeById(typeOfAppointmentId);
+
+        Appointment testAppointment = null;
+        //when
+        ResponseEntity<AppointmentDTO> appointmentDTOResponseEntity =
+                restTemplate.postForEntity(LOCAL_HOST + port + BASE_PATH,
+                        appointmentMapper.toAppointmentDTO(testAppointment),
+                        AppointmentDTO.class);
+        //then
+        assertThat(appointmentDTOResponseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     }
 
     // TODO: 22.11.2021 добавить тестирование второго метода 
