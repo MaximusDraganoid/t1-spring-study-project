@@ -60,7 +60,7 @@ public class PatientService {
     }
 
     public Set<Appointment> getAppointmentsForBooking(Long specializationId, String date, Long appointmentTypeId) {
-        return appointmentService.getAppointmentBySpecializationIdAndData(specializationId, date, appointmentTypeId);
+        return appointmentService.getAppointmentBySpecializationIdAndData(specializationId, date, appointmentTypeId, getSelfInfo().getId());
     }
 
     public List<Patient> getPatients() {

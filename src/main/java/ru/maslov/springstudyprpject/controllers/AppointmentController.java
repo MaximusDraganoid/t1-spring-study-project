@@ -1,5 +1,7 @@
 package ru.maslov.springstudyprpject.controllers;
 
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.maslov.springstudyprpject.dto.AppointmentDTO;
@@ -32,9 +34,11 @@ public class AppointmentController {
     public List<AppointmentDTO> getAppointmentBySpecializationAndData(
             @RequestParam("spec_id") @NotNull Long specializationId,
             @RequestParam("data") @NotNull String date,
-            @RequestParam("appointment_type_id") @NotNull Long appointmentTypeId
+            @RequestParam("appointment_type_id") @NotNull Long appointmentTypeId,
+            @RequestParam("patient_id") @NotNull Long patientId
             ) {
-        Set<Appointment> appointments = appointmentService.getAppointmentBySpecializationIdAndData(specializationId, date, appointmentTypeId);
+        Set<Appointment> appointments
+                = appointmentService.getAppointmentBySpecializationIdAndData(specializationId, date, appointmentTypeId, patientId);
 
         return appointments
                 .stream()
@@ -42,7 +46,7 @@ public class AppointmentController {
                 .collect(Collectors.toList());
     }
 
-    @PostMapping
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public AppointmentDTO createAppointment(@RequestBody @Valid @NotNull AppointmentDTO appointmentDTO) {
         Appointment appointment = appointmentService.saveAppointment(mapper.toAppointment(appointmentDTO));
         return mapper.toAppointmentDTO(appointment);

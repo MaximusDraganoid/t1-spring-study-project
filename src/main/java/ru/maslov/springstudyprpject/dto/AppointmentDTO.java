@@ -23,7 +23,7 @@ public class AppointmentDTO {
     private TypeOfAppointment typeOfAppointment;
 
     @NotNull
-    private StatusOfAppointment statusOfAppointment;
+    private int statusOfAppointment;
 
     private String description;
 
@@ -34,7 +34,7 @@ public class AppointmentDTO {
                           @NotNull PatientDTO patient,
                           @NotNull LocalDateTime startAppointmentDateTime,
                           @NotNull TypeOfAppointment typeOfAppointment,
-                          @NotNull StatusOfAppointment statusOfAppointment,
+                          @NotNull int statusOfAppointment,
                           String description) {
         this.id = id;
         this.doctor = doctor;
@@ -85,12 +85,12 @@ public class AppointmentDTO {
         this.typeOfAppointment = typeOfAppointment;
     }
 
-    public StatusOfAppointment getStatus() {
+    public int getStatusOfAppointment() {
         return statusOfAppointment;
     }
 
-    public void setStatus(StatusOfAppointment status) {
-        this.statusOfAppointment = status;
+    public void setStatusOfAppointment(int statusOfAppointment) {
+        this.statusOfAppointment = statusOfAppointment;
     }
 
     public String getDescription() {

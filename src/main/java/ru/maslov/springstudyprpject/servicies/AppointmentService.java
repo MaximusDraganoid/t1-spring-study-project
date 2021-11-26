@@ -69,7 +69,8 @@ public class AppointmentService {
     //todo: рефактор
     public Set<Appointment> getAppointmentBySpecializationIdAndData(Long specializationId,
                                                                     String data,
-                                                                    Long appointmentTypeId) {
+                                                                    Long appointmentTypeId,
+                                                                    Long patientId) {
         LocalDate date;
         try {
             date = LocalDate.parse(data); //todo: обработка исключений в случае неверного формата данных
@@ -78,7 +79,7 @@ public class AppointmentService {
                     + data
                     + " not supported");
         }
-        Patient patient = patientService.getSelfInfo();
+        Patient patient = patientService.getById(patientId);
         DoctorsSpecialization specialization =
                 doctorSpecializationRepository.findById(specializationId).orElseThrow(() -> {
                     throw new DoctorSpecializationNotFoundException("doctors specialization with id " +
@@ -167,5 +168,9 @@ public class AppointmentService {
                 .filter(doctorsSchedule -> doctorsSchedule.getDayOfWeek().equals(dayOfWeek))
                 .findFirst()
                 .get();
+    }
+
+    public void deleteAll() {
+        appointmentRepository.deleteAll();
     }
 }

@@ -27,7 +27,8 @@ public class Appointment {
 
     private String description;
 
-    public Appointment() {}
+    public Appointment() {
+    }
 
     public Appointment(Patient patient,
                        Doctor doctor,
@@ -83,12 +84,12 @@ public class Appointment {
         this.typeOfAppointment = typeOfAppointment;
     }
 
-    public StatusOfAppointment getStatus() {
+    public StatusOfAppointment getStatusOfAppointment() {
         return statusOfAppointment;
     }
 
-    public void setStatus(StatusOfAppointment status) {
-        this.statusOfAppointment = status;
+    public void setStatusOfAppointment(StatusOfAppointment statusOfAppointment) {
+        this.statusOfAppointment = statusOfAppointment;
     }
 
     public String getDescription() {

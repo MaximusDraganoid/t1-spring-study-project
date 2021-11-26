@@ -32,21 +32,24 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+//        super.configure(auth);
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         CustomAuthenticationFilter authenticationFilter = new CustomAuthenticationFilter(authenticationManager(), secretWord);
-        CustomAuthorizationFilter authorizationFilter = new CustomAuthorizationFilter(secretWord);
+//        CustomAuthorizationFilter authorizationFilter = new CustomAuthorizationFilter(secretWord);
 
-        authenticationFilter.setFilterProcessesUrl("/login");
+//        authenticationFilter.setFilterProcessesUrl("/login");
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         //todo: рефакторить, обязательно
         http.authorizeRequests().anyRequest().permitAll();
-
+//        http
+//                .authorizeRequests()
+//                .antMatchers("/**").permitAll();
 //
 //        http.authorizeRequests().antMatchers("/login/**").permitAll()
 //                .and()
@@ -77,7 +80,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                    .authorizeRequests().anyRequest().authenticated();
 
         http.addFilter(authenticationFilter);
-        http.addFilterBefore(authorizationFilter, UsernamePasswordAuthenticationFilter.class);
+//        http.addFilterBefore(authorizationFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
     @Bean

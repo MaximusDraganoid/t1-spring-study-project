@@ -126,7 +126,7 @@ public class DoctorService {
     public Appointment changeAppointmentStatus(Long appointmentId, String statusName) {
         Appointment appointment = appointmentService.findAppointmentById(appointmentId);
         try {
-            appointment.setStatus(StatusOfAppointment.valueOf(statusName));
+            appointment.setStatusOfAppointment(StatusOfAppointment.valueOf(statusName));
         } catch (IllegalArgumentException e) {
             throw new NoSuchAppointmentStatusException("appointment with status " + statusName + " not found");
         }
