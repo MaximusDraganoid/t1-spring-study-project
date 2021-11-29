@@ -2,6 +2,7 @@ package ru.maslov.springstudyprpject.servicies;
 
 import org.springframework.stereotype.Service;
 import ru.maslov.springstudyprpject.entities.TypeOfAppointment;
+import ru.maslov.springstudyprpject.exceptions.TypeOfAppointmentNotFoundException;
 import ru.maslov.springstudyprpject.repositories.TypeOfAppointmentRepository;
 
 import java.util.Set;
@@ -14,12 +15,12 @@ public class TypeOfAppointmentService {
         this.typeOfAppointmentRepository = typeOfAppointmentRepository;
     }
 
-    public TypeOfAppointment getTypeById(Long id) {
+    public TypeOfAppointment findById(Long id) {
         //todo: сделать тест и отделный тип исключения
         return typeOfAppointmentRepository.findById(id).orElseThrow(() -> {
-            throw new RuntimeException("No such type of appointment with id "
-                    + id
-                    + " in db");
+            throw new TypeOfAppointmentNotFoundException("type of appointment with id " +
+                    id +
+                    " not found");
         });
     }
 

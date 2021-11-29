@@ -70,7 +70,7 @@ class AppointmentControllerTest {
         Doctor doctor = doctorService.getById(doctorId);
 
         Long typeOfAppointmentId = 1L;
-        TypeOfAppointment typeOfAppointment = typeOfAppointmentService.getTypeById(typeOfAppointmentId);
+        TypeOfAppointment typeOfAppointment = typeOfAppointmentService.findById(typeOfAppointmentId);
 
         Appointment testAppointment = new Appointment(patient,
                 doctor,
@@ -98,7 +98,7 @@ class AppointmentControllerTest {
         Doctor doctor = doctorService.getById(doctorId);
 
         Long typeOfAppointmentId = 1L;
-        TypeOfAppointment typeOfAppointment = typeOfAppointmentService.getTypeById(typeOfAppointmentId);
+        TypeOfAppointment typeOfAppointment = typeOfAppointmentService.findById(typeOfAppointmentId);
 
         Appointment testAppointment = new Appointment(patient,
                 doctor,
@@ -124,7 +124,7 @@ class AppointmentControllerTest {
         doctor.setId(wrongDoctorId);
 
         Long typeOfAppointmentId = 1L;
-        TypeOfAppointment typeOfAppointment = typeOfAppointmentService.getTypeById(typeOfAppointmentId);
+        TypeOfAppointment typeOfAppointment = typeOfAppointmentService.findById(typeOfAppointmentId);
 
         Appointment testAppointment = new Appointment(patient,
                 doctor,
@@ -153,7 +153,7 @@ class AppointmentControllerTest {
         doctor.setId(wrongDoctorId);
 
         Long typeOfAppointmentId = 1L;
-        TypeOfAppointment typeOfAppointment = typeOfAppointmentService.getTypeById(typeOfAppointmentId);
+        TypeOfAppointment typeOfAppointment = typeOfAppointmentService.findById(typeOfAppointmentId);
 
         Appointment testAppointment = new Appointment(null,
                 doctor,
@@ -183,8 +183,6 @@ class AppointmentControllerTest {
         //then
         assertThat(appointmentDTOResponseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     }
-
-    // TODO: 22.11.2021 добавить тестирование второго метода
 
     @Test
     void canGetAppointmentBySpecializationAndData() {

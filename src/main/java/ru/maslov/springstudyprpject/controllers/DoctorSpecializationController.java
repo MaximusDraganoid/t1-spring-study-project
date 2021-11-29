@@ -10,7 +10,7 @@ import ru.maslov.springstudyprpject.servicies.DoctorsSpecializationService;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "/specialization")
+@RequestMapping(path = "/specializations")
 public class DoctorSpecializationController {
 
     private final DoctorsSpecializationService doctorsSpecializationService;
@@ -25,7 +25,8 @@ public class DoctorSpecializationController {
     }
 
     @PostMapping
-    public DoctorsSpecialization createSpecialization(DoctorsSpecialization specialization) {
-        return null;
+    public DoctorsSpecialization saveSpecialization(DoctorsSpecialization specialization) {
+        //todo:
+        return doctorsSpecializationService.saveSpecialization(specialization);
     }
 }

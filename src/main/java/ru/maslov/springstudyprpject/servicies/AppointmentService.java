@@ -4,11 +4,7 @@ import org.springframework.stereotype.Service;
 import ru.maslov.springstudyprpject.entities.*;
 import ru.maslov.springstudyprpject.exceptions.AppointmentDateFormatException;
 import ru.maslov.springstudyprpject.exceptions.AppointmentNotFoundException;
-import ru.maslov.springstudyprpject.exceptions.DoctorSpecializationNotFoundException;
-import ru.maslov.springstudyprpject.exceptions.TypeOfAppointmentNotFoundException;
 import ru.maslov.springstudyprpject.repositories.AppointmentRepository;
-import ru.maslov.springstudyprpject.repositories.DoctorSpecializationRepository;
-import ru.maslov.springstudyprpject.repositories.TypeOfAppointmentRepository;
 
 import java.time.*;
 import java.time.format.DateTimeParseException;
@@ -18,24 +14,23 @@ import java.util.*;
 public class AppointmentService {
     private final AppointmentRepository appointmentRepository;
 
-    private final DoctorSpecializationRepository doctorSpecializationRepository;
+    private final DoctorsSpecializationService doctorsSpecializationService;
 
-    private final TypeOfAppointmentRepository typeOfAppointmentRepository;
 
-    private DoctorService doctorService;
-    
+    private final TypeOfAppointmentService typeOfAppointmentService;
     private final PatientService patientService;
+    private final DoctorService doctorService;
 
     public AppointmentService(AppointmentRepository appointmentRepository,
-                              DoctorSpecializationRepository doctorSpecializationRepository,
-                              TypeOfAppointmentRepository typeOfAppointmentRepository,
-                              DoctorService doctorService,
-                              PatientService patientService) {
+                              DoctorsSpecializationService doctorsSpecializationService,
+                              TypeOfAppointmentService typeOfAppointmentService,
+                              PatientService patientService,
+                              DoctorService doctorService) {
         this.appointmentRepository = appointmentRepository;
-        this.doctorSpecializationRepository = doctorSpecializationRepository;
-        this.typeOfAppointmentRepository = typeOfAppointmentRepository;
-        this.doctorService = doctorService;
+        this.doctorsSpecializationService = doctorsSpecializationService;
+        this.typeOfAppointmentService = typeOfAppointmentService;
         this.patientService = patientService;
+        this.doctorService = doctorService;
     }
 
     public Appointment findAppointmentById(Long id) {
@@ -80,19 +75,9 @@ public class AppointmentService {
                     + " not supported");
         }
         Patient patient = patientService.getById(patientId);
-        DoctorsSpecialization specialization =
-                doctorSpecializationRepository.findById(specializationId).orElseThrow(() -> {
-                    throw new DoctorSpecializationNotFoundException("doctors specialization with id " +
-                            specializationId +
-                            " not found");
-                });
+        DoctorsSpecialization specialization = doctorsSpecializationService.findById(specializationId);
 
-        TypeOfAppointment typeOfAppointment =
-                typeOfAppointmentRepository.findById(appointmentTypeId).orElseThrow(() -> {
-                    throw new TypeOfAppointmentNotFoundException("type of appointment with id " +
-                            appointmentTypeId +
-                            " not found");
-                });
+        TypeOfAppointment typeOfAppointment = typeOfAppointmentService.findById(appointmentTypeId);
 
         List<Doctor> doctors = doctorService.getDoctorForAppointmentsRecordByDate(date.getDayOfWeek(),
                 specialization);
