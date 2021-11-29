@@ -73,13 +73,41 @@ class DoctorSpecializationControllerTest {
     @Test
     void canNotSaveSpecializationBecauseWrongContentType() throws Exception {
         //given
-        DoctorsSpecialization doctorsSpecialization = new DoctorsSpecialization("test_spec", new HashSet<>());
+        DoctorsSpecialization doctorsSpecialization =
+                new DoctorsSpecialization("test_spec", new HashSet<>());
         //when
         //then
         this.mockMvc.perform(post(BASE_PATH)
                         .contentType(MediaType.APPLICATION_ATOM_XML)
                         .content(asJsonString(doctorsSpecialization)))
                 .andExpect(status().isUnsupportedMediaType());
+        verify(doctorsSpecializationService, never()).saveSpecialization(doctorsSpecialization);
+    }
+
+    @Test
+    void canNotSaveSpecializationBecauseBodyIsNull() throws Exception {
+        //given
+        DoctorsSpecialization doctorsSpecialization = null;
+        //when
+        //then
+        this.mockMvc.perform(post(BASE_PATH)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(asJsonString(doctorsSpecialization)))
+                .andExpect(status().isBadRequest());
+        verify(doctorsSpecializationService, never()).saveSpecialization(doctorsSpecialization);
+    }
+
+    @Test
+    void canNotSaveSpecializationBecauseNameOfSpecializationIsNul() throws Exception{
+        //given
+        DoctorsSpecialization doctorsSpecialization =
+                new DoctorsSpecialization(null, new HashSet<>());
+        //when
+        //then
+        this.mockMvc.perform(post(BASE_PATH)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(asJsonString(doctorsSpecialization)))
+                .andExpect(status().isBadRequest());
         verify(doctorsSpecializationService, never()).saveSpecialization(doctorsSpecialization);
     }
 

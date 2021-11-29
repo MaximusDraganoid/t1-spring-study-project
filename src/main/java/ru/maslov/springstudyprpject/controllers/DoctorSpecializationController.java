@@ -1,12 +1,15 @@
 package ru.maslov.springstudyprpject.controllers;
 
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.maslov.springstudyprpject.entities.DoctorsSpecialization;
 import ru.maslov.springstudyprpject.servicies.DoctorsSpecializationService;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
+@Validated
 @RestController
 @RequestMapping(path = "/specializations")
 public class DoctorSpecializationController {
@@ -23,7 +26,7 @@ public class DoctorSpecializationController {
     }
 
     @PostMapping
-    public DoctorsSpecialization saveSpecialization(@RequestBody @NotNull DoctorsSpecialization specialization) {
+    public DoctorsSpecialization saveSpecialization(@RequestBody @NotNull @Valid DoctorsSpecialization specialization) {
         //todo:
         return doctorsSpecializationService.saveSpecialization(specialization);
     }

@@ -1,6 +1,7 @@
 package ru.maslov.springstudyprpject.entities;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Objects;
 import java.util.Set;
 
@@ -10,6 +11,7 @@ public class DoctorsSpecialization {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @NotNull
     private String name;
 
     @ManyToMany
