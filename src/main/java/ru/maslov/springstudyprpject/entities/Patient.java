@@ -16,7 +16,7 @@ public class Patient extends User{
 
     @JsonIgnore
     @OneToMany(mappedBy = "patient")
-    private Set<Appointment> appointmentSet = new HashSet<>();
+        private Set<Appointment> appointmentSet = new HashSet<>();
 
     public Patient() {}
 

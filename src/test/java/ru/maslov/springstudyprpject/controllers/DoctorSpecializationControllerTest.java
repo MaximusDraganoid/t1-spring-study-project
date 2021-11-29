@@ -22,6 +22,7 @@ import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static ru.maslov.springstudyprpject.utils.JsonObjectMapper.asJsonString;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -122,11 +123,5 @@ class DoctorSpecializationControllerTest {
         verify(doctorsSpecializationService, never()).getAllSpecializations();
     }
 
-    public static String asJsonString(Object object) {
-        try {
-            return new ObjectMapper().writeValueAsString(object);
-        } catch (Exception e) {
-            throw new RuntimeException("error, while mapping object to string", e);
-        }
-    }
+
 }

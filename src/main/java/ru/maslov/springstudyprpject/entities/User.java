@@ -14,7 +14,6 @@ import java.util.Objects;
 @Table(name = "users")
 public class User {
     @Id
-    @NotNull
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 

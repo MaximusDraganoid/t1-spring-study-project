@@ -51,12 +51,12 @@ public class PatientController {
     }
 
     @PutMapping
-    public Patient changePatientData(@RequestBody Patient patient) {
+    public Patient changePatientData(@RequestBody @NotNull Patient patient) {
         return patientService.changePatientData(patient);
     }
 
     @PostMapping
-    public Patient create(@RequestBody @Valid Patient patient) {
+    public Patient create(@RequestBody @NotNull @Valid Patient patient) {
         return patientService.save(patient);
     }
 }

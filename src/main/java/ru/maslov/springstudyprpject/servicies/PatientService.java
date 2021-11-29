@@ -78,13 +78,7 @@ public class PatientService {
     }
 
     public void deleteById(Long id) {
-        Patient patient = patientRepository.findById(id).orElseThrow(
-                () -> {
-                    throw new PatientNotFoundException("patient with id "
-                            + id +
-                            " doesn't exist in base");
-                }
-        );
+        Patient patient = getById(id);
         patientRepository.delete(patient);
     }
 
