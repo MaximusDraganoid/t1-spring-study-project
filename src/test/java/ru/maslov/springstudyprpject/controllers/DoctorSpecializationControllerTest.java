@@ -38,10 +38,12 @@ class DoctorSpecializationControllerTest {
     @Test
     void canGetSpecializations() throws Exception {
         //given
-        int expectedSize = 2;
+        List<DoctorsSpecialization> specializations
+                = List.of(new DoctorsSpecialization("test_1", new HashSet<>()),
+                new DoctorsSpecialization("test_1", new HashSet<>()));
+        int expectedSize = specializations.size();
         HttpStatus expectedStatus = HttpStatus.OK;
-        Mockito.doReturn(List.of(new DoctorsSpecialization("test_1", new HashSet<>()),
-                new DoctorsSpecialization("test_1", new HashSet<>())))
+        Mockito.doReturn(specializations)
                 .when(doctorsSpecializationService)
                 .getAllSpecializations();
         //when
