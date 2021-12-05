@@ -3,19 +3,17 @@ version: "3.7"
 services:
   app:
     image: "t1-app:latest"
-    build:
-      context: .
     container_name: app
-    depends_on:
-      - db
+    ports:
+      - 8080:8080
+    working_dir: /app
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/study-spring-database
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/study_spring_database
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=12345678
-      - SPRING_JPA_HIBERNATE_DDL_AUTO=create-drop
 
   db:
-    image: "postgres:13.1-alpine"
+    image: "t1-db:latest"
     container_name: db
     environment:
       - POSTGRES_USER=postgres
