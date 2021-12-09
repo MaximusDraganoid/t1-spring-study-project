@@ -101,6 +101,21 @@ public class Appointment {
     }
 
     @Override
+    public String toString() {
+        return "Appointment{" +
+                "id=" + id +
+                ", patient_id =" + patient.getId() +
+                ", patient_name ="+patient.getName() + patient.getSurname() +
+                ", doctor_id =" + doctor.getId() +
+                ", doctor_name ="+doctor.getName() + doctor.getSurname() +
+                ", dataTimeOfAppointment=" + dataTimeOfAppointment +
+                ", typeOfAppointment=" + typeOfAppointment.getName() +
+                ", statusOfAppointment=" + statusOfAppointment +
+                ", description='" + description + '\'' +
+                '}';
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;

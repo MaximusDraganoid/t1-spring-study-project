@@ -33,4 +33,7 @@ docker run -it --network t1-application nicolaka/netshoot. Убеждаемся,
 docker run -dp 8080:8080 --network t1-application -e SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/study_spring_database -e SPRING_DATASOURCE_USERNAME=postgres -e SPRING_DATASOURCE_PASSWORD=12345678 t1-app:latest
 //docker network t1-application
 
-<h1> запуск приложения через docker-compose (временно недоступен)</h1>
+<h1> запуск приложения через docker-compose</h1>
+docker-compose up
+
+docker run -d -p 5432:5432 -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=12345678 -e POSTGRES_DB=study_spring_database postgres:13.1-alpine
